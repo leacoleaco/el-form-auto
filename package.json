@@ -1,0 +1,74 @@
+{
+  "name": "el-form-auto",
+  "version": "1.0.1",
+  "description": "Dynamic Load Element Form for Vue.js",
+  "main": "lib/ELFormAuto.umd.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build-lib": "vue-cli-service build --target lib --name ElFormAuto 'src/el-form-auto/Form.vue'",
+    "lint": "vue-cli-service lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leacoleaco/el-form-auto.git"
+  },
+  "maintainers": [
+    "Rico Lee <leaco9012@163.com>"
+  ],
+  "homepage": "https://github.com/leacoleaco/el-form-auto",
+  "keywords": [
+    "dynamic",
+    "dynamic form",
+    "eleme",
+    "vue",
+    "components"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "core-js": "^2.6.5",
+    "element-ui": "^2.4.5",
+    "vue": "^2.6.14"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.6.0",
+    "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-service": "^3.6.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-component": "^1.1.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "sass": "^1.18.0",
+    "sass-loader": "^7.1.0",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-template-compiler": "^2.5.21"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/standard"
+    ],
+    "rules": {
+      "no-debugger": "off"
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
