@@ -237,12 +237,18 @@ export default {
     labelWidth: {
       type: String,
       default: '30px'
+    },
+    /**
+     * wether open validate
+     */
+    doValidate: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      hashMapKey: '',
-      fieldScopedSlots: null
+      hashMapKey: ''
     }
   },
   computed: {
@@ -268,9 +274,6 @@ export default {
   },
   created () {
     this._value = fixValue(this._value, this.descriptor)
-  },
-  mounted () {
-    console.log('formItem:', this.$scopedSlots)
   },
   methods: {
     isComplexDataType,
@@ -301,6 +304,37 @@ export default {
     },
     setValue (value) {
       this._value = value
+    },
+    validateCustomComponent () {
+      const promises = []
+      const validateFuns = this.travelTreeValidateFun(this)
+      if (validateFuns) {
+        for (let fun of validateFuns) {
+          const r = fun()
+          if (r instanceof Promise) {
+            promises.push(r)
+          }
+        }
+      }
+      // correct if all valid
+      return Promise.all(promises).then(r => r.indexOf(false) === -1)
+    },
+    travelTreeValidateFun (root) {
+      let res = []
+      if (!res) return res
+      let queue = [root]
+      while (queue.length) {
+        let node = queue.pop()
+        if (node.validateForm) {
+          res.push(node.validateForm)
+        }
+        if (node.$children) {
+          for (let c of node.$children) {
+            queue.unshift(c)
+          }
+        }
+      }
+      return res
     }
   }
 }

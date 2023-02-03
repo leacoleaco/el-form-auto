@@ -7,6 +7,7 @@
         :disabled="disabled"
     >
       <form-item
+          ref="formItem"
           v-for="(descriptor, key) in descriptors"
           :key="key"
           v-model="_value[key]"
@@ -101,6 +102,11 @@ export default {
       default: 8
     }
   },
+  data () {
+    return {
+      doValidate: false
+    }
+  },
   computed: {
     _value: {
       get () {
@@ -176,18 +182,21 @@ export default {
         }
       }
     },
-    validate (func) {
-      if (typeof func === 'function') {
+    validate () {
+      // validate main form
+      const promises = []
+      promises.push(new Promise((resolve, reject) => {
         this.$refs.form.validate(valid => {
-          func(valid)
+          resolve(valid)
         })
-      } else {
-        return new Promise((resolve, reject) => {
-          this.$refs.form.validate(valid => {
-            resolve(valid)
-          })
-        })
+      }))
+      // validate form in slot
+      const formItems = this.$refs['formItem']
+      for (let formItem of formItems) {
+        promises.push(formItem.validateCustomComponent())
       }
+      // correct if all valid
+      return Promise.all(promises).then(r => r.indexOf(false) === -1)
     },
     resetFields () {
       this.$refs.form.resetFields()
