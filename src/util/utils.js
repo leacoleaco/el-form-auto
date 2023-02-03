@@ -102,7 +102,6 @@ export function fixValue (value, descriptor) {
     } else if (descriptor.type === 'object') {
       return {}
     } else {
-      debugger
       return descriptor.defaultValue || null
     }
   }
