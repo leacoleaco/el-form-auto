@@ -6,7 +6,7 @@
       :model="_value"
       :disabled="disabled"
     >
-      <dynamic-form-item
+      <form-item
         v-for="(descriptor, key) in descriptors"
         :key="key"
         v-model="_value[key]"
@@ -27,7 +27,7 @@
         >
           <slot :name="name" v-bind="data" />
         </template>
-      </dynamic-form-item>
+      </form-item>
 
       <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
         <slot name="operations" />
@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import DynamicFormItem from './FormItem.vue'
 import { isObjOrArray, getLabelWidth } from '../util/utils'
+import FormItem from './FormItem.vue'
 
 export default {
-  name: 'DynamicForm',
+  name: 'ElFormAuto',
   components: {
-    DynamicFormItem
+    FormItem
   },
   props: {
     value: {
@@ -59,7 +59,7 @@ export default {
       default: false
     },
     /**
-     * descriptor of value, extend from https://github.com/yiminghe/async-validator
+     * descriptor of data
      */
     descriptors: {
       type: Object,

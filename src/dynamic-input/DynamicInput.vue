@@ -1,6 +1,7 @@
 <template>
   <!--custom component-->
   <div v-if="descriptor.type === 'custom'">
+    {{field}}
     <slot
       :name="descriptor.slotName || 'field$'+field"
       :value="_value"

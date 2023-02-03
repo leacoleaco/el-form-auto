@@ -9,35 +9,73 @@
       :rules="descriptor.rules||[]"
       :show-message="showOuterError || !isObjOrArray(descriptor.type) || Boolean(descriptor.component)"
       :size="size"
-      class="dynamic-form-item"
+      class="form-item"
   >
     <!--simple type or custom type-->
     <dynamic-input
-      v-if="!isObjOrArray(descriptor.type) || Boolean(descriptor.component)"
-      v-model="_value"
-      :size="size"
-      :field="prop"
-      :descriptor="descriptor"
+        v-if="!isObjOrArray(descriptor.type) || Boolean(descriptor.component)"
+        v-model="_value"
+        :size="size"
+        :field="prop"
+        :descriptor="descriptor"
     >
       <!--pass the parent's slots to child component-->
       <template
-        v-for="(index, name) in transferSlots"
-        v-slot:[name]="data"
+          v-for="name in transferSlots"
+          v-slot:[name]="data"
       >
-        <slot :name="name" v-bind="data" />
+        <slot :name="name" v-bind="data"/>
       </template>
     </dynamic-input>
-    <!-- complex type, object or array -->
-    <template v-else>
-      <!-- normal object or hashmap object -->
-      <template v-if="descriptor.type === 'object'">
-        <!-- normal object with known keys -->
-        <div
+    <!-- if type is array -->
+    <template v-else-if="descriptor.type === 'array'">
+      <div
+          v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
+          class="multi-select"
+      >
+        <dynamic-input
+            v-model="_value"
+            :size="size"
+            :descriptor="descriptor.itemDescriptor"
+        >
+          <!--pass the parent's slots to child component-->
+          <template
+              v-for="name in transferSlots"
+              v-slot:[name]="data"
+          >
+            <slot :name="name" v-bind="data"/>
+          </template>
+        </dynamic-input>
+      </div>
+      <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
+        <form-item
+            v-for="(temp, key) in _value"
+            :key="key"
+            v-model="_value[key]"
+            :prop="prop ? prop + '.' + key : key"
+            :deletable="true"
+            :descriptor="descriptor.itemDescriptor"
+            label-width="0px"
+            :background-color="subFormBackgroundColor"
+            :show-outer-error="showOuterError"
+            @delete="deleteItem(key)"
+        />
+        <div class="add-key-input-group">
+          <el-button type="primary" icon="el-icon-plus" :size="size" plain @click="addArrayItem">
+            {{ descriptor.addButtonText || 'add' }}
+          </el-button>
+        </div>
+      </div>
+    </template>
+    <!-- if type is object or hashmap -->
+    <template v-else-if="descriptor.type === 'object'">
+      <!-- normal object with known keys -->
+      <div
           v-if="!descriptor.itemDescriptor"
           class="sub-dynamic-form"
           :style="{backgroundColor: subFormBackgroundColor}"
-        >
-          <dynamic-form-item
+      >
+        <form-item
             v-for="(_descriptor, key) in descriptor.fields"
             :key="key"
             v-model="_value[key]"
@@ -47,16 +85,24 @@
             :label-width="getLabelWidth(descriptor.fields, fontSize)"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
-          />
-        </div>
-        <!-- hashmap object -->
-        <div
+        >
+          <!--pass the parent's slots to child component-->
+          <template
+              v-for="name in transferSlots"
+              v-slot:[name]="data"
+          >
+            <slot :name="name" v-bind="data"/>
+          </template>
+        </form-item>
+      </div>
+      <!-- hashmap object -->
+      <div
           v-else
           class="sub-dynamic-form hashmap"
           :style="{backgroundColor: subFormBackgroundColor}"
-        >
-          <dynamic-form-item
-            v-for="(temp, key) in _value"
+      >
+        <form-item
+            v-for="key in _value"
             :ref="prop + '.' + key"
             :key="key"
             v-model="_value[key]"
@@ -68,66 +114,33 @@
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
             @delete="deleteKey(key)"
-          />
-          <el-form-item>
-            <div class="add-key-input-group">
-              <el-input v-model="hashMapKey" :placeholder="descriptor.mapKeyPlaceHolder || 'key name'" :size="size" />
-              <el-button
+        >
+          <!--pass the parent's slots to child component-->
+          <template
+              v-for="name in transferSlots"
+              v-slot:[name]="data"
+          >
+            <slot :name="name" v-bind="data"/>
+          </template>
+        </form-item>
+        <el-form-item>
+          <div class="add-key-input-group">
+            <el-input v-model="hashMapKey" :placeholder="descriptor.mapKeyPlaceHolder || 'key name'" :size="size"/>
+            <el-button
                 type="primary"
                 icon="el-icon-plus"
                 :size="size"
                 :disabled="!hashMapKey || _value[hashMapKey] !== undefined"
                 plain
                 @click="addHashMapKey"
-              >
-                {{ descriptor.addButtonText || 'add'}}
-              </el-button>
-            </div>
-          </el-form-item>
-        </div>
-      </template>
-      <!-- array -->
-      <template v-else-if="descriptor.type === 'array'">
-        <div
-          v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
-          class="multi-select"
-        >
-          <dynamic-input
-            v-model="_value"
-            :size="size"
-            :descriptor="descriptor.itemDescriptor"
-          >
-            <!--pass the parent's slots to child component-->
-            <template
-              v-for="(index, name) in transferSlots"
-              v-slot:[name]="data"
             >
-              <slot :name="name" v-bind="data" />
-            </template>
-          </dynamic-input>
-        </div>
-        <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
-          <dynamic-form-item
-            v-for="(temp, key) in _value"
-            :key="key"
-            v-model="_value[key]"
-            :prop="prop ? prop + '.' + key : key"
-            :deletable="true"
-            :descriptor="descriptor.itemDescriptor"
-            label-width="0px"
-            :background-color="subFormBackgroundColor"
-            :show-outer-error="showOuterError"
-            @delete="deleteItem(key)"
-          />
-          <div class="add-key-input-group">
-            <el-button type="primary" icon="el-icon-plus" :size="size" plain @click="addArrayItem">
-              {{ descriptor.addButtonText || 'add'}}
+              {{ descriptor.addButtonText || 'add' }}
             </el-button>
           </div>
-        </div>
-      </template>
+        </el-form-item>
+      </div>
     </template>
-    <el-button v-if="deletable" class="delete-button" type="text" icon="el-icon-close" @click="emitDelete" />
+    <el-button v-if="deletable" class="delete-button" type="text" icon="el-icon-close" @click="emitDelete"/>
   </el-form-item>
 </template>
 
@@ -136,7 +149,7 @@ import { isObjOrArray, getLabelWidth, darkenColor, createDescriptorRefData, fixV
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
-  name: 'DynamicFormItem',
+  name: 'FormItem',
   components: {
     DynamicInput
   },
