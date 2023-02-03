@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { isObjOrArray, getLabelWidth, darkenColor, createDescriptorRefData } from '@/util/utils'
+import { isObjOrArray, getLabelWidth, darkenColor, createDescriptorRefData } from '../util/utils'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {

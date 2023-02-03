@@ -38,7 +38,7 @@
 
 <script>
 import DynamicFormItem from './FormItem.vue'
-import { isObjOrArray, getLabelWidth } from '@/util/utils'
+import { isObjOrArray, getLabelWidth } from '../util/utils'
 
 export default {
   name: 'DynamicForm',
