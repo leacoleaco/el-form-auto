@@ -89,3 +89,22 @@ export function createDescriptorRefData (descriptor) {
   }
   return null
 }
+
+/**
+ * fix binding value if not match descriptor
+ * @param value
+ * @param descriptor
+ */
+export function fixValue (value, descriptor) {
+  if (value === undefined) {
+    if (descriptor.type === 'array') {
+      return []
+    } else if (descriptor.type === 'object') {
+      return {}
+    } else {
+      debugger
+      return descriptor.defaultValue || null
+    }
+  }
+  return value
+}

@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { isObjOrArray, getLabelWidth, darkenColor, createDescriptorRefData } from '../util/utils'
+import { isObjOrArray, getLabelWidth, darkenColor, createDescriptorRefData, fixValue } from '../util/utils'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
@@ -157,7 +157,19 @@ export default {
       default: ''
     },
     /**
-     * descriptor of value, extend from https://github.com/yiminghe/async-validator
+     * descriptor of binding data
+     * ```javascript
+     * {
+     *  type:''           , //the data's type.  include: string,number,boolean,array,object,date,custom
+     *  label:''          , // the data's label
+     *  defaultValue:     , // the data's default value, if target is undefine, we use this value instead
+     *  rules:            , // the form's validate rule, see:  https://github.com/yiminghe/async-validator
+     *  itemDescriptor:{} , // if the type is array or object, we can use this field to descripte the item
+     *  addButtonText:''  , // if the type is array, edit this to change the add button's text
+     *  slotName:''       , // if the type is custom, we may use slot to change the component, otherwise ,the name should be 'field$xxxx',
+     * }
+     * ```
+     *
      */
     descriptor: {
       type: Object,
@@ -243,6 +255,7 @@ export default {
     }
   },
   created () {
+    this._value = fixValue(this._value, this.descriptor)
   },
   methods: {
     isObjOrArray,
