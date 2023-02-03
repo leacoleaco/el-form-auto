@@ -114,7 +114,6 @@
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
             :descriptor="descriptor.defaultField"
-            :language="language"
             label-width="0px"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
