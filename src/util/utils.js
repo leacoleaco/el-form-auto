@@ -66,28 +66,26 @@ export function darkenColor (color, offset) {
 
 /**
  * create the new binding data by descriptor info
- * @param _descriptor
  * @returns {{}|null|*[]}
+ * @param descriptor
  */
 export function createDescriptorRefData (descriptor) {
   if (['object', 'array'].includes(descriptor.type)) {
     if (descriptor.type === 'object') {
-      // object
+      // for object
       if (descriptor.fields) {
         const data = {}
         for (const key in descriptor.fields) {
           data[key] = createDescriptorRefData(descriptor.fields[key])
         }
         return data
-      } else if (descriptor.defaultField) {
-        // object is a hashmap
+      } else if (descriptor.itemDescriptor) {
         return {}
       }
-    } else {
-      // array
+    } else if (descriptor.type === 'array') {
+      // for array
       return []
     }
-  } else {
-    return null
   }
+  return null
 }

@@ -33,7 +33,7 @@
       <template v-if="descriptor.type === 'object'">
         <!-- normal object with known keys -->
         <div
-          v-if="!descriptor.defaultField"
+          v-if="!descriptor.itemDescriptor"
           class="sub-dynamic-form"
           :style="{backgroundColor: subFormBackgroundColor}"
         >
@@ -63,7 +63,7 @@
             :label="key"
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
-            :descriptor="descriptor.defaultField"
+            :descriptor="descriptor.itemDescriptor"
             :label-width="getLabelWidth(_value, fontSize)"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
@@ -89,13 +89,13 @@
       <!-- array -->
       <template v-else-if="descriptor.type === 'array'">
         <div
-          v-if="descriptor.defaultField && descriptor.defaultField.type === 'enum' && descriptor.defaultField.multiple"
+          v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
           class="multi-select"
         >
           <dynamic-input
             v-model="_value"
             :size="size"
-            :descriptor="descriptor.defaultField"
+            :descriptor="descriptor.itemDescriptor"
           >
             <!--pass the parent's slots to child component-->
             <template
@@ -113,7 +113,7 @@
             v-model="_value[key]"
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
-            :descriptor="descriptor.defaultField"
+            :descriptor="descriptor.itemDescriptor"
             label-width="0px"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
@@ -254,12 +254,13 @@ export default {
       this.$refs[this.prop].resetField()
     },
     addHashMapKey () {
-      this.$set(this._value, this.hashMapKey, createDescriptorRefData(this.descriptor.defaultField))
+      this.$set(this._value, this.hashMapKey, createDescriptorRefData(this.descriptor.itemDescriptor))
       this.hashMapKey = ''
       this.$refs[this.prop].resetField() // reset field to clear validate status while adding fist hashmap key
     },
     addArrayItem () {
-      this._value.push(createDescriptorRefData(this.descriptor.defaultField))
+      const item = createDescriptorRefData(this.descriptor.itemDescriptor)
+      this._value.push(item)
     },
     emitDelete () {
       this.$emit('delete')
