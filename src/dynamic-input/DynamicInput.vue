@@ -1,17 +1,8 @@
 <template>
-  <!--custom component-->
-  <div v-if="descriptor.type === 'custom'">
-    {{field}}
-    <slot
-      :name="descriptor.slotName || 'field$'+field"
-      :value="_value"
-      :setValue="setValue"
-    />
-  </div>
   <!--dynamic component which already register-->
   <component
     :is="_name"
-    v-else-if="!isSpecialType||(descriptor.component && descriptor.component.name)"
+    v-if="!isSpecialType||(descriptor.component && descriptor.component.name)"
     v-model="_value"
     class="dynamic-input"
     v-bind="_bind"
@@ -165,9 +156,6 @@ export default {
   created () {
   },
   methods: {
-    setValue (value) {
-      this.$emit('input', value)
-    }
   }
 }
 </script>

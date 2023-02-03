@@ -7,26 +7,33 @@
       :prop="prop"
       :required="descriptor.required"
       :rules="descriptor.rules||[]"
-      :show-message="showOuterError || !isObjOrArray(descriptor.type) || Boolean(descriptor.component)"
+      :show-message="showOuterError || !isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
       :size="size"
       class="form-item"
   >
-    <!--simple type or custom type-->
+    <!--simple type -->
     <dynamic-input
-        v-if="!isObjOrArray(descriptor.type) || Boolean(descriptor.component)"
+        v-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
         v-model="_value"
         :size="size"
         :field="prop"
         :descriptor="descriptor"
-    >
-      <!--pass the parent's slots to child component-->
-      <template
-          v-for="name in transferSlots"
-          v-slot:[name]="data"
-      >
-        <slot :name="name" v-bind="data"/>
-      </template>
-    </dynamic-input>
+    />
+    <!-- if type is custom slot type-->
+    <div v-else-if="descriptor.type==='custom'">
+      <slot
+          v-if="$scopedSlots[descriptor.slotName]"
+          :name="descriptor.slotName"
+          :value="_value"
+          :setValue="setValue"
+      />
+      <slot
+          v-else
+          :name="'field$'+prop"
+          :value="_value"
+          :setValue="setValue"
+      />
+    </div>
     <!-- if type is array -->
     <template v-else-if="descriptor.type === 'array'">
       <div
@@ -37,15 +44,7 @@
             v-model="_value"
             :size="size"
             :descriptor="descriptor.itemDescriptor"
-        >
-          <!--pass the parent's slots to child component-->
-          <template
-              v-for="name in transferSlots"
-              v-slot:[name]="data"
-          >
-            <slot :name="name" v-bind="data"/>
-          </template>
-        </dynamic-input>
+        />
       </div>
       <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
         <form-item
@@ -59,7 +58,15 @@
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
             @delete="deleteItem(key)"
-        />
+        >
+          <!--pass the parent's slots to child component-->
+          <template
+              v-for="(_ , name) in $scopedSlots"
+              v-slot:[name]="data"
+          >
+            <slot :name="name" v-bind="data"/>
+          </template>
+        </form-item>
         <div class="add-key-input-group">
           <el-button type="primary" icon="el-icon-plus" :size="size" plain @click="addArrayItem">
             {{ descriptor.addButtonText || 'add' }}
@@ -88,7 +95,7 @@
         >
           <!--pass the parent's slots to child component-->
           <template
-              v-for="name in transferSlots"
+              v-for="(_ , name) in $scopedSlots"
               v-slot:[name]="data"
           >
             <slot :name="name" v-bind="data"/>
@@ -117,7 +124,7 @@
         >
           <!--pass the parent's slots to child component-->
           <template
-              v-for="name in transferSlots"
+              v-for="(_ , name) in $scopedSlots"
               v-slot:[name]="data"
           >
             <slot :name="name" v-bind="data"/>
@@ -145,7 +152,7 @@
 </template>
 
 <script>
-import { isObjOrArray, getLabelWidth, darkenColor, createDescriptorRefData, fixValue } from '../util/utils'
+import { isComplexDataType, getLabelWidth, darkenColor, createDescriptorRefData, fixValue } from '../util/utils'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
@@ -234,7 +241,8 @@ export default {
   },
   data () {
     return {
-      hashMapKey: ''
+      hashMapKey: '',
+      fieldScopedSlots: null
     }
   },
   computed: {
@@ -248,15 +256,6 @@ export default {
     },
     subFormBackgroundColor () {
       return this.bgColorOffset ? darkenColor(this.backgroundColor, this.bgColorOffset) : 'none'
-    },
-    transferSlots () {
-      const r = {}
-      for (const key in this.$scopedSlots) {
-        if (key.startsWith('field$')) {
-          r[key] = this.$scopedSlots[key]
-        }
-      }
-      return r
     }
   },
   watch: {
@@ -270,8 +269,11 @@ export default {
   created () {
     this._value = fixValue(this._value, this.descriptor)
   },
+  mounted () {
+    console.log('formItem:', this.$scopedSlots)
+  },
   methods: {
-    isObjOrArray,
+    isComplexDataType,
     getLabelWidth,
     clearValidate () {
       this.$refs[this.prop].clearValidate()
@@ -296,6 +298,9 @@ export default {
     },
     deleteItem (index) {
       this._value.splice(index, 1)
+    },
+    setValue (value) {
+      this._value = value
     }
   }
 }

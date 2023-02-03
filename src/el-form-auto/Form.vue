@@ -1,43 +1,43 @@
 <template>
   <div class="form" :style="style">
     <el-form
-      v-if="_value"
-      ref="form"
-      :model="_value"
-      :disabled="disabled"
+        v-if="_value"
+        ref="form"
+        :model="_value"
+        :disabled="disabled"
     >
       <form-item
-        v-for="(descriptor, key) in descriptors"
-        :key="key"
-        v-model="_value[key]"
-        :lang="lang"
-        :label="descriptor.label || key"
-        :prop="key"
-        :label-width="labelWidth"
-        :descriptor="descriptor"
-        :size="size"
-        :background-color="backgroundColor"
-        :bg-color-offset="bgColorOffset"
-        :show-outer-error="showOuterError"
+          v-for="(descriptor, key) in descriptors"
+          :key="key"
+          v-model="_value[key]"
+          :lang="lang"
+          :label="descriptor.label || key"
+          :prop="key"
+          :label-width="labelWidth"
+          :descriptor="descriptor"
+          :size="size"
+          :background-color="backgroundColor"
+          :bg-color-offset="bgColorOffset"
+          :show-outer-error="showOuterError"
       >
         <!--pass the parent's slots to child component-->
         <template
-          v-for="(index, name) in $scopedSlots"
-          v-slot:[name]="data"
+            v-for="(_, name) in $scopedSlots"
+            v-slot:[name]="data"
         >
-          <slot :name="name" v-bind="data" />
+          <slot :name="name" v-bind="data"/>
         </template>
       </form-item>
 
       <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
-        <slot name="operations" />
+        <slot name="operations"/>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { isObjOrArray, getLabelWidth } from '../util/utils'
+import { isComplexDataType, getLabelWidth } from '../util/utils'
 import FormItem from './FormItem.vue'
 
 export default {
@@ -134,6 +134,9 @@ export default {
   created () {
     this.init()
   },
+  mounted () {
+    console.log(this.$scopedSlots)
+  },
   methods: {
     init () {
       this.initValue()
@@ -144,7 +147,7 @@ export default {
       }
     },
     setValueKey (target, value, key, descriptor) {
-      if (isObjOrArray(descriptor.type)) {
+      if (isComplexDataType(descriptor.type)) {
         if (descriptor.type === 'object') {
           // object
           if (descriptor.fields) {
