@@ -64,7 +64,6 @@ export default {
   },
   props: {
     value: {
-      type: [String, Number, Boolean, Array, Object, Date, Function, Symbol],
       required: true
     },
     /**
