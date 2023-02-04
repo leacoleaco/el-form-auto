@@ -141,7 +141,6 @@ export default {
     this.init()
   },
   mounted () {
-    console.log(this.$scopedSlots)
   },
   methods: {
     init () {
