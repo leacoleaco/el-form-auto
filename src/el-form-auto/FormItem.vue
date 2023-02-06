@@ -58,6 +58,7 @@
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
             @delete="deleteItem(key)"
+            @fieldInput="e=>$emit('fieldInput',e)"
         >
           <!--pass the parent's slots to child component-->
           <template
@@ -92,6 +93,7 @@
             :label-width="getLabelWidth(descriptor.fields, fontSize)"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
+            @fieldInput="e=>$emit('fieldInput',e)"
         >
           <!--pass the parent's slots to child component-->
           <template
@@ -121,6 +123,7 @@
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
             @delete="deleteKey(key)"
+            @input="e=>$emit('fieldInput',e)"
         >
           <!--pass the parent's slots to child component-->
           <template
@@ -257,6 +260,11 @@ export default {
       },
       set (value) {
         this.$emit('input', value)
+        this.$emit('fieldInput', {
+          prop: this.prop,
+          descriptor: this.descriptor,
+          value: value
+        })
       }
     },
     subFormBackgroundColor () {

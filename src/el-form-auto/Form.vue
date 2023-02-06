@@ -3,8 +3,10 @@
     <el-form
         v-if="_value"
         ref="form"
+        style="background: none"
         :model="_value"
         :disabled="disabled"
+        :size="size"
         :label-position="labelPosition"
     >
       <form-item
@@ -21,6 +23,7 @@
           :background-color="backgroundColor"
           :bg-color-offset="bgColorOffset"
           :show-outer-error="showOuterError"
+          @fieldInput="e=>$emit('fieldInput',e)"
       >
         <!--pass the parent's slots to child component-->
         <template
@@ -39,7 +42,7 @@
 </template>
 
 <script>
-import {isComplexDataType, getLabelWidth} from '../util/utils'
+import { isComplexDataType, getLabelWidth } from '../util/utils'
 import FormItem from './FormItem.vue'
 
 export default {
@@ -111,21 +114,21 @@ export default {
       default: 8
     }
   },
-  data() {
+  data () {
     return {
       doValidate: false
     }
   },
   computed: {
     _value: {
-      get() {
+      get () {
         return this.value
       },
-      set(value) {
+      set (value) {
         this.$emit('input', value)
       }
     },
-    rules() {
+    rules () {
       const r = {}
       for (const prop in this.descriptors) {
         const rules = this.descriptors[prop].rules
@@ -135,10 +138,10 @@ export default {
       }
       return r
     },
-    labelWidth() {
+    labelWidth () {
       return getLabelWidth(this.descriptors, this.fontSize)
     },
-    style() {
+    style () {
       const style = {
         fontSize: `${this.fontSize}px`,
         backgroundColor: this.backgroundColor
@@ -146,21 +149,21 @@ export default {
       return style
     }
   },
-  created() {
+  created () {
     this.init()
   },
-  mounted() {
+  mounted () {
   },
   methods: {
-    init() {
+    init () {
       this.initValue()
     },
-    initValue() {
+    initValue () {
       for (const key in this.descriptors) {
         this.setValueKey(this, this._value, key, this.descriptors[key])
       }
     },
-    setValueKey(target, value, key, descriptor) {
+    setValueKey (target, value, key, descriptor) {
       if (isComplexDataType(descriptor.type)) {
         if (descriptor.type === 'object') {
           // object
@@ -190,7 +193,7 @@ export default {
         }
       }
     },
-    validate() {
+    validate () {
       // validate main form
       const promises = []
       promises.push(new Promise((resolve, reject) => {
@@ -206,10 +209,10 @@ export default {
       // correct if all valid
       return Promise.all(promises).then(r => r.indexOf(false) === -1)
     },
-    resetFields() {
+    resetFields () {
       this.$refs.form.resetFields()
     },
-    clearValidate() {
+    clearValidate () {
       this.$refs.form.clearValidate()
     }
   }
@@ -219,6 +222,7 @@ export default {
 <style lang="scss">
 // cover element's css avoid the nested error style
 .form {
+  background: none;
   .el-form-item.is-success, .add-key-input-group {
     .el-input__inner,
     .el-input__inner:focus,
