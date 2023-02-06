@@ -5,6 +5,7 @@
         ref="form"
         :model="_value"
         :disabled="disabled"
+        :label-position="labelPosition"
     >
       <form-item
           ref="formItem"
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import { isComplexDataType, getLabelWidth } from '../util/utils'
+import {isComplexDataType, getLabelWidth} from '../util/utils'
 import FormItem from './FormItem.vue'
 
 export default {
@@ -74,6 +75,14 @@ export default {
       default: 'small'
     },
     /**
+     * show label position
+     * [top, left ,right]
+     */
+    labelPosition: {
+      type: String,
+      default: 'right'
+    },
+    /**
      * background-color of form
      */
     backgroundColor: {
@@ -102,21 +111,21 @@ export default {
       default: 8
     }
   },
-  data () {
+  data() {
     return {
       doValidate: false
     }
   },
   computed: {
     _value: {
-      get () {
+      get() {
         return this.value
       },
-      set (value) {
+      set(value) {
         this.$emit('input', value)
       }
     },
-    rules () {
+    rules() {
       const r = {}
       for (const prop in this.descriptors) {
         const rules = this.descriptors[prop].rules
@@ -126,10 +135,10 @@ export default {
       }
       return r
     },
-    labelWidth () {
+    labelWidth() {
       return getLabelWidth(this.descriptors, this.fontSize)
     },
-    style () {
+    style() {
       const style = {
         fontSize: `${this.fontSize}px`,
         backgroundColor: this.backgroundColor
@@ -137,21 +146,21 @@ export default {
       return style
     }
   },
-  created () {
+  created() {
     this.init()
   },
-  mounted () {
+  mounted() {
   },
   methods: {
-    init () {
+    init() {
       this.initValue()
     },
-    initValue () {
+    initValue() {
       for (const key in this.descriptors) {
         this.setValueKey(this, this._value, key, this.descriptors[key])
       }
     },
-    setValueKey (target, value, key, descriptor) {
+    setValueKey(target, value, key, descriptor) {
       if (isComplexDataType(descriptor.type)) {
         if (descriptor.type === 'object') {
           // object
@@ -181,7 +190,7 @@ export default {
         }
       }
     },
-    validate () {
+    validate() {
       // validate main form
       const promises = []
       promises.push(new Promise((resolve, reject) => {
@@ -197,10 +206,10 @@ export default {
       // correct if all valid
       return Promise.all(promises).then(r => r.indexOf(false) === -1)
     },
-    resetFields () {
+    resetFields() {
       this.$refs.form.resetFields()
     },
-    clearValidate () {
+    clearValidate() {
       this.$refs.form.clearValidate()
     }
   }
