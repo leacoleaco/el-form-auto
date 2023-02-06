@@ -1,6 +1,6 @@
 # Introduce
 
-auto create form with descriptor config.
+Auto create form with descriptor config.
 
 
 ### How to use in Vue2
@@ -9,7 +9,7 @@ auto create form with descriptor config.
 npm install el-form-auto
 ```
 
-example config:
+Example config:
 
 //TODO:
 
@@ -17,8 +17,8 @@ example config:
 
 ### How to build project
 
-1. install  dependency
-2. 
+1. Install  dependency
+
 ```shell
 npm install
 ```
