@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { isComplexDataType, getLabelWidth } from '../util/utils'
+import { isComplexDataType, getLabelWidth, fixValue } from '../util/utils'
 import FormItem from './FormItem.vue'
 
 export default {
@@ -188,10 +188,12 @@ export default {
             target.$set(value, key, [])
           }
         }
-      } else {
+      } else if (descriptor.type === 'array') {
         if (value[key] === undefined) {
           target.$set(value, key, null)
         }
+      } else {
+        target.$set(value, key, fixValue(undefined, descriptor))
       }
     },
     validate () {
@@ -224,6 +226,7 @@ export default {
 // cover element's css avoid the nested error style
 .form {
   background: none;
+
   .el-form-item.is-success, .add-key-input-group {
     .el-input__inner,
     .el-input__inner:focus,

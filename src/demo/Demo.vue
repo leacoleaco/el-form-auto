@@ -9,7 +9,7 @@
           <!--use custom component -->
           <template #field$custom1="{value,setValue,data}">
             <div>we can write custom component here~ just use slot name 'field$'+prop name</div>
-            <div>current field value is: {{ value }}</div>
+            <div>you can get current field value: {{ value }}</div>
             <div>you also could get data, example: {{ data.number1 }}</div>
           </template>
 
@@ -44,8 +44,10 @@ export default {
   data () {
     return {
       data: {
-        field_str: '',
-        field_array: ''
+        number2: 99,
+        list1: [{
+          text1: 'I am an array item'
+        }]
       },
       descriptors: {
         field_str: {
@@ -64,12 +66,13 @@ export default {
           defaultValue: 2
         },
         custom1: {
-          type: 'custom'
+          type: 'custom',
+          defaultValue: 'default value test'
         },
         custom2: {
           type: 'custom',
           slotName: 'customSlotName',
-          rules: [{ required: true, message: 'custom component' }]
+          rules: [{ required: true, message: 'write custom component valid message here~ ' }]
         },
         list1: {
           type: 'array',
