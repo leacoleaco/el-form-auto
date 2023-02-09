@@ -1,6 +1,6 @@
 # Introduce
 
-auto create form with descriptor config.
+Auto create form with descriptor config.
 
 ### How to use in Vue2
 
@@ -24,8 +24,7 @@ Vue.use(ElementUI)
 
 ### How to build lib
 
-1. install dependency
-
+1. Install dependency
 ```shell
 npm install
 ```
