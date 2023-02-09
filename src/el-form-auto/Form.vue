@@ -14,6 +14,7 @@
           v-for="(descriptor, key) in descriptors"
           :key="key"
           v-model="_value[key]"
+          :data="value"
           :lang="lang"
           :label="descriptor.label || key"
           :prop="key"

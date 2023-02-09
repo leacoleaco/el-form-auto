@@ -7,4 +7,9 @@ module.exports = {
   productionSourceMap: false,
   // 强制lib不生成独立css文件
   css: { extract: false },
+  chainWebpack: (config) => {
+    config.entry('index')
+      .add('./src/main.js')
+      .end()
+  }
 }

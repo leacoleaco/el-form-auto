@@ -16,3 +16,5 @@ fs.cp('./dist/ElFormAuto.umd.min.js', p + '/ElFormAuto.umd.min.js', (err) => {
     console.error(err)
   }
 })
+
+console.log('finish!')

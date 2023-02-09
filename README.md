@@ -2,28 +2,35 @@
 
 auto create form with descriptor config.
 
-
 ### How to use in Vue2
+
+1. install el-form-auto.
 
 ```shell
 npm install el-form-auto
 ```
 
-example config:
+2. Global reg the element-ui component in main.js file.
 
-//TODO:
+```js
+import ElementUI from 'element-ui'
+
+Vue.use(ElementUI)
+```
+
+3. Binding data and description.
+   see demo: [Demo.vue](src/demo/Demo.vue)
 
 
+### How to build lib
 
-### How to build project
+1. install dependency
 
-1. install  dependency
-2. 
 ```shell
 npm install
 ```
 
-2. Compiles and hot-reloads for development
+2. Run build-lib
 
 ```shell
 npm run build-lib

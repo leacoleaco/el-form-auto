@@ -26,12 +26,14 @@
           :name="descriptor.slotName"
           :value="_value"
           :setValue="setValue"
+          :data="data"
       />
       <slot
           v-else
           :name="'field$'+prop"
           :value="_value"
           :setValue="setValue"
+          :data="data"
       />
     </div>
     <!-- if type is array -->
@@ -51,6 +53,7 @@
             v-for="(temp, key) in _value"
             :key="key"
             v-model="_value[key]"
+            :data="data"
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
             :descriptor="descriptor.itemDescriptor"
@@ -87,6 +90,7 @@
             v-for="(_descriptor, key) in descriptor.fields"
             :key="key"
             v-model="_value[key]"
+            :data="data"
             :label="_descriptor.label || key"
             :prop="prop ? prop + '.' + key : key"
             :descriptor="_descriptor"
@@ -115,6 +119,7 @@
             :ref="prop + '.' + key"
             :key="key"
             v-model="_value[key]"
+            :data="data"
             :label="key"
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
@@ -198,6 +203,13 @@ export default {
       required: true
     },
     /**
+     * the form's binding data
+     */
+    data: {
+      type: Object,
+      required: true
+    },
+    /**
      * size of the input component
      */
     size: {
@@ -277,10 +289,13 @@ export default {
       if (val.indexOf('.') !== -1) {
         this.hashMapKey = this.hashMapKey.replace(/\./g, '')
       }
+    },
+    value (v) {
+      this._value = fixValue(v, this.descriptor)
     }
   },
   created () {
-    this._value = fixValue(this._value, this.descriptor)
+    this._value = fixValue(this.value, this.descriptor)
   },
   methods: {
     isComplexDataType,

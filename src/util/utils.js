@@ -98,10 +98,13 @@ export function createDescriptorRefData (descriptor) {
 export function fixValue (value, descriptor) {
   if (value === undefined) {
     if (descriptor.type === 'array') {
+      console.warn(descriptor.label, descriptor.type, value)
       return []
     } else if (descriptor.type === 'object') {
+      console.warn(descriptor.label, descriptor.type, value)
       return {}
     } else {
+      console.warn(descriptor.label, descriptor.type, value)
       return descriptor.defaultValue || null
     }
   }
