@@ -1,20 +1,21 @@
 const fs = require('fs')
 
-let p = './lib'
+function copy (source, dest) {
+  console.log(`copy '${source}' to '${dest}'`)
+  fs.cp(source, dest, (err) => {
+    if (err) {
+      console.error(err)
+    }
+  })
+}
+
+let p = '.'
 let idx = process.argv.indexOf('--d')
 if (idx !== -1) {
   p = process.argv[idx + 1]
+  copy('./package.json', p + '/package.json')
 }
-fs.cp('./dist/ElFormAuto.umd.js', p + '/ElFormAuto.umd.js', (err) => {
-  if (err) {
-    console.error(err)
-  }
-})
-
-fs.cp('./dist/ElFormAuto.umd.min.js', p + '/ElFormAuto.umd.min.js', (err) => {
-  if (err) {
-    console.error(err)
-  }
-})
+copy('./dist/ElFormAuto.umd.js', p + '/lib/ElFormAuto.umd.js')
+copy('./dist/ElFormAuto.umd.min.js', p + '/lib/ElFormAuto.umd.min.js')
 
 console.log('finish!')
