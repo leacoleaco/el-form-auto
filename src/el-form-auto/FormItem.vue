@@ -19,6 +19,7 @@
           :value="_value"
           :setValue="setValue"
           :data="data"
+          :placeholder="descriptor.placeholder"
       />
       <slot
           v-else
@@ -26,6 +27,7 @@
           :value="_value"
           :setValue="setValue"
           :data="data"
+          :placeholder="descriptor.placeholder"
       />
     </div>
     <!--simple type -->

@@ -1,6 +1,6 @@
 {
   "name": "el-form-auto",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Dynamic Load Element Form for Vue.js",
   "main": "lib/ELFormAuto.umd.js",
   "files": [
