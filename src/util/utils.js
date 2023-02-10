@@ -1,5 +1,5 @@
 export function isComplexDataType (type) {
-  return ['object', 'array', 'custom'].includes(type)
+  return [ 'object', 'array' ].includes(type)
 }
 
 /**
