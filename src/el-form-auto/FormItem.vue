@@ -11,16 +11,8 @@
       :size="size"
       class="form-item"
   >
-    <!--simple type -->
-    <dynamic-input
-        v-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
-        v-model="_value"
-        :size="size"
-        :field="prop"
-        :descriptor="descriptor"
-    />
     <!-- if type is custom slot type-->
-    <div v-else-if="descriptor.type==='custom'">
+    <div v-if="descriptor.type==='custom'">
       <slot
           v-if="$scopedSlots[descriptor.slotName]"
           :name="descriptor.slotName"
@@ -36,6 +28,14 @@
           :data="data"
       />
     </div>
+    <!--simple type -->
+    <dynamic-input
+        v-else-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
+        v-model="_value"
+        :size="size"
+        :field="prop"
+        :descriptor="descriptor"
+    />
     <!-- if type is array -->
     <template v-else-if="descriptor.type === 'array'">
       <div
