@@ -1,0 +1,54 @@
+<meta charset="utf-8">
+<title>el-form-auto demo</title>
+<script src="https://unpkg.com/vue@2.7.14/dist/vue.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../dist/ElFormAuto.umd.js"></script>
+
+
+<div id="app">
+    <el-form-auto
+            v-model="data"
+            :descriptors="descriptors"
+    ></el-form-auto>
+</div>
+
+<script>
+  new Vue({
+    components: {
+      'el-form-auto': ElFormAuto,
+
+    },
+    data: function () {
+      return {
+        data: {
+          field1: '',
+          field2: '',
+          sourceImageArea: [],
+          standAnswers: [{
+            text: '1'
+          }]
+        },
+        descriptors: {
+          field1: {
+            type: 'string',
+            label: 'Field1',
+            rules: [{
+              type: 'string',
+              required: true,
+            }]
+          },
+          field2: {
+            type: 'string',
+            label: 'email',
+            useSlot: true,
+            rules: [
+              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+            ]
+          },
+        }
+      }
+    }
+  }).$mount('#app')
+</script>
