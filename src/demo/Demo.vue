@@ -7,19 +7,20 @@
             :descriptors="descriptors" v-model="data">
 
           <!--use custom component -->
-          <template #field$custom1="{value,setValue,data}">
+          <template #field$custom1="{value,setValue,data,placeholder}">
             <div>we can write custom component here~ just use slot name 'field$'+prop name</div>
-            <div>you can get current field value: {{ value }}</div>
-            <div>you also could get data, example: {{ data.number1 }}</div>
+            <div>you can get current field value: <i>{{ value }}</i></div>
+            <div>you also could get data, example: <i>{{ data.number1 }}</i></div>
+            <div>get/binding placeholder here: example: <i>{{ placeholder }}</i></div>
           </template>
 
           <!--use custom slot name for custom component-->
-          <template #customSlotName="{value,setValue,data}">
+          <template #customSlotName="{value,setValue,data, placeholder}">
             <el-time-select
                 :value="value"
                 @input="setValue"
                 :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }"
-                placeholder="choose time">
+                :placeholder="placeholder">
             </el-time-select>
           </template>
         </el-form-auto>
@@ -67,11 +68,13 @@ export default {
         },
         custom1: {
           type: 'custom',
-          defaultValue: 'default value test'
+          defaultValue: 'default value test',
+          placeholder: 'i am placeholder'
         },
         custom2: {
           type: 'custom',
           slotName: 'customSlotName',
+          placeholder: 'choose time',
           rules: [{ required: true, message: 'write custom component valid message here~ ' }]
         },
         list1: {
