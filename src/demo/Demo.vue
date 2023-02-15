@@ -5,8 +5,11 @@
         <div>With this descriptor:</div>
         <el-input type="textarea"
                   :rows="15"
-                  :value="JSON.stringify(descriptors,null,2)"
+                  v-model="myInputDescriptorConfig"
         ></el-input>
+        <el-button @click="updateFormByMyInputDescriptorConfig" size="mini" style="margin-top:10px" type="warning">
+          Regenerate Form
+        </el-button>
 
         <div>and the form will auto binding to data:</div>
         <pre style="padding:20px;background: #efefef ">{{ JSON.stringify(data, null, 1) }}</pre>
@@ -162,8 +165,12 @@ export default {
             }
           }
         }
-      }
+      },
+      myInputDescriptorConfig: ''
     }
+  },
+  created () {
+    this.myInputDescriptorConfig = JSON.stringify(this.descriptors, null, 2)
   },
   methods: {
     validate () {
@@ -187,6 +194,16 @@ export default {
     },
     clearValidate () {
       this.$refs.autoForm.clearValidate()
+    },
+    updateFormByMyInputDescriptorConfig () {
+      try {
+        this.descriptors = JSON.parse(this.myInputDescriptorConfig)
+      } catch (e) {
+        this.$message({
+          message: 'descriptor config contain error! ' + e,
+          type: 'error'
+        })
+      }
     }
   }
 
