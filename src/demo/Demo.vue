@@ -66,6 +66,10 @@ export default {
           type: 'number',
           defaultValue: 2
         },
+        boolean1: {
+          type: 'boolean',
+          defaultValue: true
+        },
         custom1: {
           type: 'custom',
           defaultValue: 'default value test',
@@ -96,6 +100,10 @@ export default {
                 rules: [
                   { required: true, message: 'you need to input text' }
                 ]
+              },
+              boolean2: {
+                type: 'boolean',
+                defaultValue: true
               },
               number1: {
                 type: 'number',

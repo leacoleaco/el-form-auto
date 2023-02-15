@@ -1,5 +1,5 @@
 export function isComplexDataType (type) {
-  return [ 'object', 'array' ].includes(type)
+  return ['object', 'array'].includes(type)
 }
 
 /**
@@ -87,7 +87,7 @@ export function createDescriptorRefData (descriptor) {
       return []
     }
   }
-  return null
+  return fixValue(undefined, descriptor)
 }
 
 /**
