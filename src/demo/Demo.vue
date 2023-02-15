@@ -1,38 +1,52 @@
 <template>
   <div>
     <el-row :gutter="10">
-      <el-col :span="15">
-        <el-form-auto
-            ref="autoForm"
-            :descriptors="descriptors" v-model="data">
-
-          <!--use custom component -->
-          <template #field$custom1="{value,setValue,data,placeholder}">
-            <div>we can write custom component here~ just use slot name 'field$'+prop name</div>
-            <div>you can get current field value: <i>{{ value }}</i></div>
-            <div>you also could get data, example: <i>{{ data.number1 }}</i></div>
-            <div>get/binding placeholder here: example: <i>{{ placeholder }}</i></div>
-          </template>
-
-          <!--use custom slot name for custom component-->
-          <template #customSlotName="{value,setValue,data, placeholder}">
-            <el-time-select
-                :value="value"
-                @input="setValue"
-                :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }"
-                :placeholder="placeholder">
-            </el-time-select>
-          </template>
-        </el-form-auto>
-        <el-button @click="validate" type="primary">validate</el-button>
-        <el-button @click="clearValidate">clearValidate</el-button>
-        <el-button @click="resetFields">resetFields</el-button>
-      </el-col>
       <el-col :span="8">
-        <div>BindingData is:</div>
-        <pre>{{ JSON.stringify(data, null, 1) }}</pre>
+        <div>With this descriptor:</div>
+        <el-input type="textarea"
+                  :rows="15"
+                  :value="JSON.stringify(descriptors,null,2)"
+        ></el-input>
+
+        <div>and the form will auto binding to data:</div>
+        <pre style="padding:20px;background: #efefef ">{{ JSON.stringify(data, null, 1) }}</pre>
+      </el-col>
+      <el-col :span="15">
+        <div>the form will auto generate by the descriptor we input:</div>
+        <div style="padding: 20px;background: #efefef">
+          <el-form-auto
+              ref="autoForm"
+              :descriptors="descriptors" v-model="data">
+
+            <!--use custom component -->
+            <template #field$custom1="{value,setValue,data,placeholder}">
+              <div>we can write custom component here~ just use slot name 'field$'+prop name</div>
+              <div>you can get current field value: <i>{{ value }}</i></div>
+              <div>you also could get data, example: <i>{{ data.number1 }}</i></div>
+              <div>get/binding placeholder here: example: <i>{{ placeholder }}</i></div>
+            </template>
+
+            <!--use custom slot name for custom component-->
+            <template #customSlotName="{value,setValue,data, placeholder}">
+              <el-time-select
+                  :value="value"
+                  @input="setValue"
+                  :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }"
+                  :placeholder="placeholder">
+              </el-time-select>
+            </template>
+          </el-form-auto>
+          <el-button @click="validate" type="primary">validate</el-button>
+          <el-button @click="clearValidate">clearValidate</el-button>
+          <el-button @click="resetFields">resetFields</el-button>
+        </div>
       </el-col>
     </el-row>
+    <a href="https://github.com/leacoleaco/el-form-auto" target="_blank" style="cursor: pointer">
+      <img style="position: absolute; top: 0; right: 0; border: 0;"
+           src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+           alt="Fork me on GitHub"
+           data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
   </div>
 </template>
 

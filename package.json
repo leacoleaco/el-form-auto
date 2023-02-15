@@ -10,6 +10,7 @@
     "build-lib": "vue-cli-service build --target lib --name ElFormAuto 'src/el-form-auto/Form.vue'",
     "lint": "vue-cli-service lint",
     "demo": "vue-cli-service serve",
+    "build-demo": "vue-cli-service build",
     "copy-to-lib": "node copy_util.js"
   },
   "repository": {
