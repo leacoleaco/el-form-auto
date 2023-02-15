@@ -2,6 +2,11 @@
 
 Auto create form with descriptor config.
 
+### What is this
+we can use form descriptor to auto generate form.
+
+see this [demo](https://leacoleaco.github.io/el-form-auto-example/)
+
 ### How to use in Vue2
 
 1. install el-form-auto.
@@ -19,12 +24,14 @@ Vue.use(ElementUI)
 ```
 
 3. Binding data and description.
-   see demo: [Demo.vue](src/demo/Demo.vue)
+
+4. Usage you can see the demo: [Demo.vue](src/demo/Demo.vue)
 
 
 ### How to build lib
 
 1. Install dependency
+
 ```shell
 npm install
 ```
