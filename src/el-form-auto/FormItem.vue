@@ -332,7 +332,7 @@ export default {
     validateCustomComponent () {
       const promises = []
       const validateFuns = this.travelTreeValidateFun(this)
-      if (validateFuns) {
+      if (validateFuns && validateFuns.length) {
         for (let fun of validateFuns) {
           const r = fun()
           if (r instanceof Promise) {
@@ -349,8 +349,8 @@ export default {
       let queue = [root]
       while (queue.length) {
         let node = queue.pop()
-        if (node.validateForm) {
-          res.push(node.validateForm)
+        if (node.auto$ValidateForm) {
+          res.push(node.auto$ValidateForm)
         }
         if (node.$children) {
           for (let c of node.$children) {

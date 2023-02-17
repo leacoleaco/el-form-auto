@@ -38,6 +38,16 @@
                   :placeholder="placeholder">
               </el-time-select>
             </template>
+
+            <!--use custom slot name for custom component-->
+            <template #field$custom3="{value,setValue,data, placeholder}">
+              <custom-component
+                  :value="value"
+                  @input="setValue"
+              >
+              </custom-component>
+            </template>
+
           </el-form-auto>
           <el-button @click="validate" type="primary">validate</el-button>
           <el-button @click="clearValidate">clearValidate</el-button>
@@ -55,10 +65,11 @@
 
 <script>
 import ElFormAuto from '@/el-form-auto/Form.vue'
+import CustomComponent from '@/demo/CustomComponent.vue'
 
 export default {
   name: 'Demo',
-  components: { ElFormAuto },
+  components: { CustomComponent, ElFormAuto },
   data () {
     return {
       data: {
@@ -97,6 +108,10 @@ export default {
           slotName: 'customSlotName',
           placeholder: 'choose time',
           rules: [{ required: true, message: 'write custom component valid message here~ ' }]
+        },
+        custom3: {
+          type: 'custom',
+          defaultValue: 'July'
         },
         list1: {
           type: 'array',
