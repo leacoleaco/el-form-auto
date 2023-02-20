@@ -23,10 +23,11 @@
 
             <!--use custom component -->
             <template #field$custom1="{value,setValue,data,placeholder}">
-              <div>we can write custom component here~ just use slot name 'field$'+prop name</div>
-              <div>you can get current field value: <i>{{ value }}</i></div>
-              <div>you also could get data, example: <i>{{ data.number1 }}</i></div>
-              <div>get/binding placeholder here: example: <i>{{ placeholder }}</i></div>
+              <div>we can use slot name 'field$'+prop here to obtain a reference to the corresponding component.</div>
+              <div>you can get current field value here: <i>{{ value }}</i></div>
+              <div>But if you want to modify the bound value, you need to call the 'setValue' method to update it. (You can refer to the example of 'custom2' field, template named '#customSlotName')</div>
+              <div>you can also get or binding global data here, example: <i>{{ data.number1 }}</i>&nbsp;&nbsp;<el-input-number size="mini" v-model="data.number1"/></div>
+              <div>you can get or binding placeholder here: example: <i>{{ placeholder }}</i>&nbsp;&nbsp; <el-input size="mini" style="width:200px" :placeholder="placeholder" /></div>
             </template>
 
             <!--use custom slot name for custom component-->
