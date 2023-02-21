@@ -90,6 +90,7 @@ export default {
           type: 'string',
           label: 'String Field',
           placeholder: 'input string placeholder test',
+          // Refer to the link https://github.com/yiminghe/async-validator for more rule usage examples.
           rules: [{
             type: 'string',
             required: true,
