@@ -130,6 +130,9 @@ export default {
           ],
           placeholder: 'Please choose some fruits'
         },
+        date1: {
+          type: 'date'
+        },
         custom1: {
           type: 'custom',
           defaultValue: 'default value test',
