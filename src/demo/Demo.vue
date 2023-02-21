@@ -25,9 +25,15 @@
             <template #field$custom1="{value,setValue,data,placeholder}">
               <div>we can use slot name 'field$'+prop here to obtain a reference to the corresponding component.</div>
               <div>you can get current field value here: <i>{{ value }}</i></div>
-              <div>But if you want to modify the bound value, you need to call the 'setValue' method to update it. (You can refer to the example of 'custom2' field, template named '#customSlotName')</div>
-              <div>you can also get or binding global data here, example: <i>{{ data.number1 }}</i>&nbsp;&nbsp;<el-input-number size="mini" v-model="data.number1"/></div>
-              <div>you can get or binding placeholder here: example: <i>{{ placeholder }}</i>&nbsp;&nbsp; <el-input size="mini" style="width:200px" :placeholder="placeholder" /></div>
+              <div>But if you want to modify the bound value, you need to call the 'setValue' method to update it. (You
+                can refer to the example of 'custom2' field, template named '#customSlotName')
+              </div>
+              <div>you can also get or binding global data here, example: <i>{{ data.number1 }}</i>&nbsp;&nbsp;<el-input-number
+                  size="mini" v-model="data.number1"/>
+              </div>
+              <div>you can get or binding placeholder here: example: <i>{{ placeholder }}</i>&nbsp;&nbsp;
+                <el-input size="mini" style="width:200px" :placeholder="placeholder"/>
+              </div>
             </template>
 
             <!--use custom slot name for custom component-->
@@ -98,6 +104,31 @@ export default {
         boolean1: {
           type: 'boolean',
           defaultValue: true
+        },
+        enum1: {
+          type: 'enum',
+          options: ['Tiger', 'Lion', 'Eagle'],
+          placeholder: 'Please choose an animal'
+        },
+        enum2: {
+          type: 'enum',
+          options: [
+            { label: 'A', value: 0 },
+            { label: 'B', value: 1 },
+            { label: 'C', value: 2 }
+          ],
+          placeholder: 'Please choose a letter'
+        },
+        enum3: {
+          type: 'enum',
+          label: 'MultipleEnum',
+          multiple: true,
+          options: [
+            { label: 'Orange', value: 0 },
+            { label: 'Banana', value: 1 },
+            { label: 'Apple', value: 2 }
+          ],
+          placeholder: 'Please choose some fruits'
         },
         custom1: {
           type: 'custom',
