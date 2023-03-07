@@ -1,11 +1,9 @@
 # Introduce
 
-Auto create form with descriptor config.
-
 ### What is this
-we can use form descriptor to auto generate form.
-
+This is a library that allows you to build forms using descriptive configurations.
 see this [demo](https://leacoleaco.github.io/el-form-auto-example/)
+
 
 ### How to use in Vue2
 
