@@ -120,6 +120,11 @@ export default {
       doValidate: false
     }
   },
+  watch: {
+    descriptors () {
+      this.init()
+    }
+  },
   computed: {
     _value: {
       get () {

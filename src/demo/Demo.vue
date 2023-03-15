@@ -13,6 +13,9 @@
 
         <div>and the form will auto binding to data:</div>
         <pre style="padding:20px;background: #efefef ">{{ JSON.stringify(data, null, 1) }}</pre>
+        <el-button @click="data={}" size="mini" style="margin-top:10px">
+          clearData
+        </el-button>
       </el-col>
       <el-col :span="15">
         <div>the form will auto generate by the descriptor we input:</div>
