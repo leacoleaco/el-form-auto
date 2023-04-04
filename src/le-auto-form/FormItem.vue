@@ -168,7 +168,7 @@
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
-  name: 'FormItem',
+  name: 'LeAutoFormItem',
   components: {
     DynamicInput
   }

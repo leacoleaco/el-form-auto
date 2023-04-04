@@ -18,7 +18,7 @@ npm install el-form-auto element-ui --save
 if you use vue3, you can use this command.
 
 ```shell
-npm install el-form-auto-vue3 element-plus --save
+npm install le-auto-form element-plus --save
 ```
 
 

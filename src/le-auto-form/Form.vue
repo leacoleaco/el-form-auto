@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import FormItem from '@/el-form-auto/FormItem.vue'
+import FormItem from '@/le-auto-form/FormItem.vue'
 
 export default {
-  name: 'ElFormAuto',
+  name: 'LeAutoForm',
   components: {
     FormItem
   },

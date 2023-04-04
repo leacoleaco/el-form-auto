@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import ElFormAuto from '@/el-form-auto/Form.vue'
+import ElFormAuto from '@/le-auto-form/Form.vue'
 import CustomComponent from '@/demo/CustomComponent.vue'
 import { ElMessage } from 'element-plus'
 

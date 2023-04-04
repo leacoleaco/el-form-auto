@@ -1,13 +1,13 @@
 {
-  "name": "el-form-auto-vue3",
-  "version": "3.0.1",
+  "name": "le-auto-form",
+  "version": "3.0.2",
   "description": "Dynamic Load Element Form for Vue3",
-  "main": "lib/ELFormAuto.umd.js",
+  "main": "lib/LeAutoForm.umd.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "build-lib": "vue-cli-service build --target lib --name ElFormAuto 'src/el-form-auto/Form.vue'",
+    "build-lib": "vue-cli-service build --target lib --name LeAutoForm 'src/le-auto-form/Form.vue'",
     "lint": "vue-cli-service lint",
     "demo": "vue-cli-service serve",
     "build-demo": "vue-cli-service build",
