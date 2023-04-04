@@ -1,5 +1,5 @@
 {
-  "name": "le-auto-form",
+  "name": "lea-auto-form",
   "version": "3.0.5",
   "description": "Dynamic Load Element Form for Vue3",
   "main": "lib/LeAutoForm.umd.js",
