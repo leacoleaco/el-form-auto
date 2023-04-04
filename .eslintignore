@@ -1,0 +1,7 @@
+/lib/*.js
+/public/
+/dist/
+/node_modules/**/*.js
+/*.js
+*.umd.js
+*.min.js
