@@ -27,7 +27,7 @@
                 <div>the form will auto generate by the descriptor we input:</div>
                 <div style="padding: 20px;background: #efefef">
                     <el-form-auto
-                            ref="autoForm"
+                            ref="refAutoForm"
                             :descriptors="descriptors"
                             v-model="data"
                     >
@@ -52,9 +52,10 @@
 
                         <!--use custom slot name for custom component-->
                         <template #customSlotName="{value,setValue,data, placeholder}">
+                            {{value}}
                             <el-time-select
-                                    :value="value"
-                                    @input="setValue"
+                                    :model-value="value"
+                                    @update:modelValue="setValue"
                                     :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }"
                                     :placeholder="placeholder">
                             </el-time-select>
@@ -63,8 +64,8 @@
                         <!--use custom slot name for custom component-->
                         <template #field$custom3="{value,setValue,data, placeholder}">
                             <custom-component
-                                    :value="value"
-                                    @input="setValue"
+                                :model-value="value"
+                                @update:modelValue="setValue"
                             >
                             </custom-component>
                         </template>
@@ -87,6 +88,7 @@
 <script>
 import ElFormAuto from '@/el-form-auto/Form.vue'
 import CustomComponent from '@/demo/CustomComponent.vue'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'Demo',
@@ -98,14 +100,37 @@ export default {
         list1: [{ text1: 'I am an array item1' }]
       }
     }
+  },
+  methods: {
+    validate () {
+      let refAutoForm = this.$refs.refAutoForm
+      refAutoForm.validate().then(valid => {
+        if (valid) {
+          ElMessage.success({
+            message: 'validate success'
+          })
+        } else {
+          ElMessage.error({
+            message: 'validate fail'
+          })
+        }
+      })
+    },
+    resetFields () {
+      this.$refs.refAutoForm.resetFields()
+    },
+    clearValidate () {
+      this.$refs.refAutoForm.clearValidate()
+    }
   }
+
 }
 </script>
 
 <script setup>
 
 import {ElMessage} from 'element-plus'
-import {ref,reactive} from "vue";
+import {ref, reactive} from "vue";
 
 // const data = reactive({
 //     number2: 99,
@@ -248,31 +273,6 @@ const descriptors = reactive({
 const myInputDescriptorConfig = ref({})
 
 myInputDescriptorConfig.value = JSON.stringify(descriptors, null, 2)
-
-const autoForm = ref(null)
-
-function validate(autoForm) {
-    autoForm.value.validate().then((valid) => {
-        if (valid) {
-            ElMessage.success({
-                message: 'validate success',
-            })
-        } else {
-            ElMessage.error({
-                message: 'validate fail',
-            })
-        }
-    })
-}
-
-function resetFields(autoForm) {
-    autoForm.value.resetFields()
-}
-
-function clearValidate(autoForm) {
-    autoForm.value.clearValidate()
-}
-
 function updateFormByMyInputDescriptorConfig() {
     try {
         descriptors.value = JSON.parse(myInputDescriptorConfig.value)

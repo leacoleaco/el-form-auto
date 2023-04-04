@@ -281,8 +281,6 @@ const props = defineProps({
 const value = props.modelValue
 
 function updateValue(v) {
-    // value.value = v
-    console.log("formItem",v)
     emit('update:modelValue', v)
     emit('fieldInput', {
         prop: props.prop,
@@ -350,7 +348,7 @@ function deleteItem(index) {
 
 function validateCustomComponent() {
     const promises = []
-    const validateFuns = this.travelTreeValidateFun(this)
+    const validateFuns = travelTreeValidateFun(this)
     if (validateFuns && validateFuns.length) {
         for (let fun of validateFuns) {
             const r = fun()
@@ -379,6 +377,10 @@ function travelTreeValidateFun(root) {
     }
     return res
 }
+
+defineExpose({
+    validateCustomComponent
+})
 
 </script>
 

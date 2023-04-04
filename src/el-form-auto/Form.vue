@@ -2,15 +2,15 @@
     <div class="form" :style="style">
         <el-form
                 v-if="value"
-                ref="form"
+                ref="refForm"
                 style="background: none"
-                v-model="value"
+                :model="value"
                 :disabled="disabled"
                 :size="size"
                 :label-position="labelPosition"
         >
             <form-item
-                    ref="formItems"
+                    ref="refFormItems"
                     v-for="(descriptor, key) in descriptors"
                     :key="key"
                     :model-value="value[key]"
@@ -49,7 +49,11 @@ export default {
   name: 'ElFormAuto',
   components: {
     FormItem
+  },
+  methods: {
+
   }
+
 }
 </script>
 
@@ -126,8 +130,8 @@ const props = defineProps({
 
 const doValidate = ref(false)
 
-const form = ref(null)
-const formItems = ref(null)
+const refForm = ref(null)
+const refFormItems = ref([])
 
 watch(
     () => props.descriptors,
@@ -142,8 +146,7 @@ const value = props.modelValue
 //     set: (value) => emit('update:modelValue', value)
 // })
 
-function updateValue(prop,v) {
-    console.log('form', v)
+function updateValue(prop, v) {
     value[prop] = v
     // emit('update:modelValue', v)
 }
@@ -211,31 +214,37 @@ const setValueKey = (refValue, fieldKey, descriptor) => {
     }
 }
 
+init()
+
 function validate() {
     // validate main form
     const promises = []
     promises.push(new Promise((resolve, reject) => {
-        this.$refs.form.validate(valid => {
+        refForm.value.validate(valid => {
             resolve(valid)
         })
     }))
     // validate form in slot
-    for (let formItem of formItems) {
-        promises.push(formItem.validateCustomComponent())
+    for (let refFormItem of refFormItems.value) {
+        promises.push(refFormItem.validateCustomComponent())
     }
     // correct if all valid
     return Promise.all(promises).then(r => r.indexOf(false) === -1)
 }
 
-function resetFields() {
-    form.value.resetFields()
+function resetFields () {
+    refForm.value.resetFields()
 }
 
-function clearValidate() {
-    form.value.clearValidate()
+function clearValidate () {
+    refForm.value.clearValidate()
 }
 
-init()
+defineExpose({
+    validate,
+    resetFields,
+    clearValidate
+})
 
 </script>
 

@@ -93,8 +93,6 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const updateValue = (v) => {
-    // value.value = value
-    console.log('dynamicInput', v)
     emit('update:modelValue', v)
 }
 
