@@ -12,13 +12,13 @@ see this [demo](https://leacoleaco.github.io/el-form-auto-example/)
 if you use vue2, you can use this command.
 
 ```shell
-npm install el-form-auto
+npm install el-form-auto element-ui --save
 ```
 
 if you use vue3, you can use this command.
 
 ```shell
-npm install el-form-auto@vue3
+npm install el-form-auto-vue3 element-plus --save
 ```
 
 
