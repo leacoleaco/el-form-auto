@@ -1,3 +1,5 @@
+import { reactive, ref } from 'vue'
+
 export function isComplexDataType (type) {
   return ['object', 'array'].includes(type)
 }
@@ -98,11 +100,15 @@ export function createDescriptorRefData (descriptor) {
 export function fixValue (value, descriptor) {
   if (value === undefined) {
     if (descriptor.type === 'array') {
-      return []
+      return reactive([])
     } else if (descriptor.type === 'object') {
-      return {}
+      return reactive({})
     } else {
-      return descriptor.defaultValue || null
+      if (isComplexDataType(typeof descriptor.defaultValue)) {
+        return reactive(descriptor.defaultValue)
+      } else {
+        return ref(descriptor.defaultValue || null)
+      }
     }
   }
   return value

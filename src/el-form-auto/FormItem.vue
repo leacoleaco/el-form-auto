@@ -1,189 +1,202 @@
 <template>
-  <el-form-item
-      v-show="!descriptor.hidden"
-      :ref="prop"
-      :label="labelWidth === '0px' ? '' : (label || prop)"
-      :label-width="labelWidth"
-      :prop="prop"
-      :required="descriptor.required"
-      :rules="descriptor.rules||[]"
-      :show-message="showOuterError || !isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
-      :size="size"
-      class="form-item"
-  >
-    <!-- if type is custom slot type-->
-    <div v-if="descriptor.type==='custom'">
-      <slot
-          v-if="$scopedSlots[descriptor.slotName]"
-          :name="descriptor.slotName"
-          :value="_value"
-          :setValue="setValue"
-          :data="data"
-          :placeholder="descriptor.placeholder"
-      />
-      <slot
-          v-else
-          :name="'field$'+prop"
-          :value="_value"
-          :setValue="setValue"
-          :data="data"
-          :placeholder="descriptor.placeholder"
-      />
-    </div>
-    <!--simple type -->
-    <dynamic-input
-        v-else-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
-        v-model="_value"
-        :size="size"
-        :field="prop"
-        :descriptor="descriptor"
-    />
-    <!-- if type is array -->
-    <template v-else-if="descriptor.type === 'array'">
-      <div
-          v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
-          class="multi-select"
-      >
-        <dynamic-input
-            v-model="_value"
+    <el-form-item
+            v-show="!descriptor.hidden"
+            :ref="prop"
+            :label="labelWidth === '0px' ? '' : (label || prop)"
+            :label-width="labelWidth"
+            :prop="prop"
+            :required="descriptor.required"
+            :rules="descriptor.rules||[]"
+            :show-message="showOuterError || !isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
             :size="size"
-            :descriptor="descriptor.itemDescriptor"
-        />
-      </div>
-      <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
-        <form-item
-            v-for="(temp, key) in _value"
-            :key="key"
-            v-model="_value[key]"
-            :data="data"
-            :prop="prop ? prop + '.' + key : key"
-            :deletable="true"
-            :descriptor="descriptor.itemDescriptor"
-            label-width="0px"
-            :background-color="subFormBackgroundColor"
-            :show-outer-error="showOuterError"
-            @delete="deleteItem(key)"
-            @fieldInput="e=>$emit('fieldInput',e)"
-        >
-          <!--pass the parent's slots to child component-->
-          <template
-              v-for="(_ , name) in $scopedSlots"
-              v-slot:[name]="data"
-          >
-            <slot :name="name" v-bind="data"/>
-          </template>
-        </form-item>
-        <div class="add-key-input-group">
-          <el-button type="primary" icon="el-icon-plus" :size="size" plain @click="addArrayItem">
-            {{ descriptor.addButtonText || 'add' }}
-          </el-button>
+            class="form-item"
+    >
+        <!-- if type is custom slot type-->
+        <div v-if="descriptor.type==='custom'">
+            <slot
+                    v-if="$slots[descriptor.slotName]"
+                    :name="descriptor.slotName"
+                    :value="value"
+                    :setValue="updateValue"
+                    :data="data"
+                    :placeholder="descriptor.placeholder"
+            />
+            <slot
+                    v-else
+                    :name="'field$'+prop"
+                    :value="value"
+                    :setValue="updateValue"
+                    :data="data"
+                    :placeholder="descriptor.placeholder"
+            />
         </div>
-      </div>
-    </template>
-    <!-- if type is object or hashmap -->
-    <template v-else-if="descriptor.type === 'object'">
-      <!-- normal object with known keys -->
-      <div
-          v-if="!descriptor.itemDescriptor"
-          class="sub-dynamic-form"
-          :style="{backgroundColor: subFormBackgroundColor}"
-      >
-        <form-item
-            v-for="(_descriptor, key) in descriptor.fields"
-            :key="key"
-            v-model="_value[key]"
-            :data="data"
-            :label="_descriptor.label || key"
-            :prop="prop ? prop + '.' + key : key"
-            :descriptor="_descriptor"
-            :label-width="getLabelWidth(descriptor.fields, fontSize)"
-            :background-color="subFormBackgroundColor"
-            :show-outer-error="showOuterError"
-            @fieldInput="e=>$emit('fieldInput',e)"
-        >
-          <!--pass the parent's slots to child component-->
-          <template
-              v-for="(_ , name) in $scopedSlots"
-              v-slot:[name]="data"
-          >
-            <slot :name="name" v-bind="data"/>
-          </template>
-        </form-item>
-      </div>
-      <!-- hashmap object -->
-      <div
-          v-else
-          class="sub-dynamic-form hashmap"
-          :style="{backgroundColor: subFormBackgroundColor}"
-      >
-        <form-item
-            v-for="key in _value"
-            :ref="prop + '.' + key"
-            :key="key"
-            v-model="_value[key]"
-            :data="data"
-            :label="key"
-            :prop="prop ? prop + '.' + key : key"
-            :deletable="true"
-            :descriptor="descriptor.itemDescriptor"
-            :label-width="getLabelWidth(_value, fontSize)"
-            :background-color="subFormBackgroundColor"
-            :show-outer-error="showOuterError"
-            @delete="deleteKey(key)"
-            @input="e=>$emit('fieldInput',e)"
-        >
-          <!--pass the parent's slots to child component-->
-          <template
-              v-for="(_ , name) in $scopedSlots"
-              v-slot:[name]="data"
-          >
-            <slot :name="name" v-bind="data"/>
-          </template>
-        </form-item>
-        <el-form-item>
-          <div class="add-key-input-group">
-            <el-input v-model="hashMapKey" :placeholder="descriptor.mapKeyPlaceHolder || 'key name'" :size="size"/>
-            <el-button
-                type="primary"
-                icon="el-icon-plus"
+        <!--simple type -->
+        <!--                v-model="value"-->
+        <dynamic-input
+                v-else-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
+                :model-value="props.modelValue"
+                @update:modelValue="updateValue"
                 :size="size"
-                :disabled="!hashMapKey || _value[hashMapKey] !== undefined"
-                plain
-                @click="addHashMapKey"
+                :field="prop"
+                :descriptor="descriptor"
+        />
+        <!-- if type is array -->
+        <template v-else-if="descriptor.type === 'array'">
+            <div v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
+                class="multi-select"
             >
-              {{ descriptor.addButtonText || 'add' }}
-            </el-button>
-          </div>
-        </el-form-item>
-      </div>
-    </template>
-    <el-button v-if="deletable" class="delete-button" type="text" icon="el-icon-close" @click="emitDelete"/>
-  </el-form-item>
+                <dynamic-input
+                    :model-value="props.modelValue"
+                    @update:modelValue="updateValue"
+                    :size="size"
+                    :descriptor="descriptor.itemDescriptor"
+                />
+            </div>
+            <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
+                <form-item
+                        v-for="(temp, key) in value"
+                        :key="key"
+                        v-model="value[key]"
+                        :data="data"
+                        :prop="prop ? prop + '.' + key : key"
+                        :deletable="true"
+                        :descriptor="descriptor.itemDescriptor"
+                        label-width="0px"
+                        :background-color="subFormBackgroundColor"
+                        :show-outer-error="showOuterError"
+                        @delete="deleteItem(key)"
+                        @fieldInput="e=>$emit('fieldInput',e)"
+                >
+                    <!--pass the parent's slots to child component-->
+                    <template
+                            v-for="(_ , name) in $slots"
+                            v-slot:[name]="data"
+                    >
+                        <slot :name="name" v-bind="data"/>
+                    </template>
+                </form-item>
+                <div class="add-key-input-group">
+                    <el-button type="primary" icon="el-icon-plus" :size="size" plain @click="addArrayItem">
+                        {{ descriptor.addButtonText || 'add' }}
+                    </el-button>
+                </div>
+            </div>
+        </template>
+        <!-- if type is object or hashmap -->
+        <template v-else-if="descriptor.type === 'object'">
+            <!-- normal object with known keys -->
+            <div
+                    v-if="!descriptor.itemDescriptor"
+                    class="sub-dynamic-form"
+                    :style="{backgroundColor: subFormBackgroundColor}"
+            >
+                <form-item
+                        v-for="(_descriptor, key) in descriptor.fields"
+                        :key="key"
+                        v-model="value[key]"
+                        :data="data"
+                        :label="_descriptor.label || key"
+                        :prop="prop ? prop + '.' + key : key"
+                        :descriptor="_descriptor"
+                        :label-width="getLabelWidth(descriptor.fields, fontSize)"
+                        :background-color="subFormBackgroundColor"
+                        :show-outer-error="showOuterError"
+                        @fieldInput="e=>$emit('fieldInput',e)"
+                >
+                    <!--pass the parent's slots to child component-->
+                    <template
+                            v-for="(_ , name) in $slots"
+                            v-slot:[name]="data"
+                    >
+                        <slot :name="name" v-bind="data"/>
+                    </template>
+                </form-item>
+            </div>
+            <!-- hashmap object -->
+            <div
+                    v-else
+                    class="sub-dynamic-form hashmap"
+                    :style="{backgroundColor: subFormBackgroundColor}"
+            >
+                <form-item
+                        v-for="key in value"
+                        :ref="prop + '.' + key"
+                        :key="key"
+                        v-model="value[key]"
+                        :data="data"
+                        :label="key"
+                        :prop="prop ? prop + '.' + key : key"
+                        :deletable="true"
+                        :descriptor="descriptor.itemDescriptor"
+                        :label-width="getLabelWidth(value, fontSize)"
+                        :background-color="subFormBackgroundColor"
+                        :show-outer-error="showOuterError"
+                        @delete="deleteKey(key)"
+                        @input="e=>$emit('fieldInput',e)"
+                >
+                    <!--pass the parent's slots to child component-->
+                    <template
+                            v-for="(_ , name) in $slots"
+                            v-slot:[name]="data"
+                    >
+                        <slot :name="name" v-bind="data"/>
+                    </template>
+                </form-item>
+                <el-form-item>
+                    <div class="add-key-input-group">
+                        <el-input v-model="hashMapKey" :placeholder="descriptor.mapKeyPlaceHolder || 'key name'"
+                                  :size="size"/>
+                        <el-button
+                                type="primary"
+                                icon="el-icon-plus"
+                                :size="size"
+                                :disabled="!hashMapKey || value[hashMapKey] !== undefined"
+                                plain
+                                @click="addHashMapKey"
+                        >
+                            {{ descriptor.addButtonText || 'add' }}
+                        </el-button>
+                    </div>
+                </el-form-item>
+            </div>
+        </template>
+        <el-button v-if="deletable" class="delete-button" link icon="el-icon-close" @click="emitDelete"/>
+    </el-form-item>
 </template>
 
 <script>
-import { isComplexDataType, getLabelWidth, darkenColor, createDescriptorRefData, fixValue } from '../util/utils'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
   name: 'FormItem',
   components: {
     DynamicInput
-  },
-  props: {
-    value: {
-      required: true
+  }
+}
+</script>
+
+<script setup>
+import {computed, onMounted, ref, watch} from "vue";
+import {createDescriptorRefData, darkenColor, fixValue, getLabelWidth, isComplexDataType} from "@/util/utils";
+
+const hashMapKey = ref('')
+
+const emit = defineEmits(['update:modelValue', 'fieldInput', 'delete'])
+
+const props = defineProps({
+    modelValue: {
+        required: true
     },
     /**
      * the data's field
      */
     prop: {
-      type: String,
-      default: ''
+        type: String,
+        default: ''
     },
     label: {
-      type: String,
-      default: ''
+        type: String,
+        default: ''
     },
     /**
      * descriptor of binding data
@@ -201,167 +214,172 @@ export default {
      *
      */
     descriptor: {
-      type: Object,
-      required: true
+        type: Object,
+        required: true
     },
     /**
      * the form's binding data
      */
     data: {
-      type: Object,
-      required: true
+        type: Object,
+        required: true
     },
     /**
      * size of the input component
      */
     size: {
-      type: String,
-      default: 'small'
+        type: String,
+        default: 'small'
     },
     /**
      * font-size of form
      */
     fontSize: {
-      type: Number,
-      default: 14
+        type: Number,
+        default: 14
     },
     /**
      * background-color of form
      */
     backgroundColor: {
-      type: String,
-      default: '#FFFFFF'
+        type: String,
+        default: '#FFFFFF'
     },
     /**
      * darken sub-form's background-color with offset if got positive integer
      */
     bgColorOffset: {
-      type: Number,
-      default: 8
+        type: Number,
+        default: 8
     },
     /**
      * whether show parent component's error, default true
      */
     showOuterError: {
-      type: Boolean,
-      default: true
+        type: Boolean,
+        default: true
     },
     deletable: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     },
     labelWidth: {
-      type: String,
-      default: '30px'
+        type: String,
+        default: '30px'
     },
     /**
      * wether open validate
      */
     doValidate: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     }
-  },
-  data () {
-    return {
-      hashMapKey: ''
-    }
-  },
-  computed: {
-    _value: {
-      get () {
-        return this.value
-      },
-      set (value) {
-        this.$emit('input', value)
-        this.$emit('fieldInput', {
-          prop: this.prop,
-          descriptor: this.descriptor,
-          value: value
-        })
-      }
-    },
-    subFormBackgroundColor () {
-      return this.bgColorOffset ? darkenColor(this.backgroundColor, this.bgColorOffset) : 'none'
-    }
-  },
-  watch: {
-    hashMapKey (val) {
-      // el-form-item's prop not support "."
-      if (val.indexOf('.') !== -1) {
-        this.hashMapKey = this.hashMapKey.replace(/\./g, '')
-      }
-    },
-    value (v) {
-      this._value = fixValue(v, this.descriptor)
-    }
-  },
-  created () {
-    this._value = fixValue(this.value, this.descriptor)
-  },
-  methods: {
-    isComplexDataType,
-    getLabelWidth,
-    clearValidate () {
-      this.$refs[this.prop].clearValidate()
-    },
-    resetField () {
-      this.$refs[this.prop].resetField()
-    },
-    addHashMapKey () {
-      this.$set(this._value, this.hashMapKey, createDescriptorRefData(this.descriptor.itemDescriptor))
-      this.hashMapKey = ''
-      this.$refs[this.prop].resetField() // reset field to clear validate status while adding fist hashmap key
-    },
-    addArrayItem () {
-      const item = createDescriptorRefData(this.descriptor.itemDescriptor)
-      this._value.push(item)
-    },
-    emitDelete () {
-      this.$emit('delete')
-    },
-    deleteKey (key) {
-      this.$delete(this._value, key)
-    },
-    deleteItem (index) {
-      this._value.splice(index, 1)
-    },
-    setValue (value) {
-      this._value = value
-    },
-    validateCustomComponent () {
-      const promises = []
-      const validateFuns = this.travelTreeValidateFun(this)
-      if (validateFuns && validateFuns.length) {
-        for (let fun of validateFuns) {
-          const r = fun()
-          if (r instanceof Promise) {
-            promises.push(r)
-          }
+})
+
+// console.assert(props.modelValue !== undefined, `绑定 ${props.prop} 时, modelValue 不能为undefined`)
+
+const value = props.modelValue
+
+function updateValue(v) {
+    // value.value = v
+    console.log("formItem",v)
+    emit('update:modelValue', v)
+    emit('fieldInput', {
+        prop: props.prop,
+        descriptor: props.descriptor,
+        value: v
+    })
+}
+
+const subFormBackgroundColor = computed(() => {
+    return props.bgColorOffset
+        ? darkenColor(props.backgroundColor, props.bgColorOffset)
+        : 'none'
+})
+
+watch(
+    () => props.hashMapKey,
+    (val) => {
+        if (val.indexOf('.') !== -1) {
+            hashMapKey.value = hashMapKey.value.replace(/\./g, '')
         }
-      }
-      // correct if all valid
-      return Promise.all(promises).then(r => r.indexOf(false) === -1)
-    },
-    travelTreeValidateFun (root) {
-      let res = []
-      if (!res) return res
-      let queue = [root]
-      while (queue.length) {
+    }
+)
+
+// watch(
+//     () => props.modelValue,
+//     (v) => {
+//         if(value){
+//             value = fixValue(v, props.descriptor)
+//         }
+//     }
+// )
+
+function clearValidate() {
+    this.$refs[props.prop].clearValidate()
+}
+
+function resetField() {
+    this.$refs[props.prop].resetField()
+}
+
+function addHashMapKey() {
+    value[hashMapKey.value] = createDescriptorRefData(
+        props.descriptor.itemDescriptor
+    )
+    hashMapKey.value = ''
+    this.$refs[props.prop].resetField()
+}
+
+function addArrayItem() {
+    const item = createDescriptorRefData(props.descriptor.itemDescriptor)
+    value.push(item)
+}
+
+function emitDelete() {
+    emit('delete')
+}
+
+function deleteKey(key) {
+    delete value[key]
+}
+
+function deleteItem(index) {
+    value.splice(index, 1)
+}
+
+function validateCustomComponent() {
+    const promises = []
+    const validateFuns = this.travelTreeValidateFun(this)
+    if (validateFuns && validateFuns.length) {
+        for (let fun of validateFuns) {
+            const r = fun()
+            if (r instanceof Promise) {
+                promises.push(r)
+            }
+        }
+    }
+    return Promise.all(promises).then((r) => r.indexOf(false) === -1)
+}
+
+function travelTreeValidateFun(root) {
+    let res = []
+    if (!res) return res
+    let queue = [root]
+    while (queue.length) {
         let node = queue.pop()
         if (node.auto$ValidateForm) {
-          res.push(node.auto$ValidateForm)
+            res.push(node.auto$ValidateForm)
         }
         if (node.$children) {
-          for (let c of node.$children) {
-            queue.unshift(c)
-          }
+            for (let c of node.$children) {
+                queue.unshift(c)
+            }
         }
-      }
-      return res
     }
-  }
+    return res
 }
+
 </script>
 
 <style lang="scss" scoped>

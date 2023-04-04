@@ -7,20 +7,24 @@
     <div>
       use custom component validate example:
     </div>
-    <input v-model="text" type="text" @input="onChange">&nbsp;
+    <input v-model="text" link @input="onChange">&nbsp;
     <span v-if="error" style="color:orangered">{{ error }}</span>
   </div>
 </template>
 
 <script>
 export default {
+  emits: ['input', 'input'],
   name: 'CustomComponent',
+
   props: {
     value: { type: String, required: true }
   },
+
   created () {
     this.text = this.value
   },
+
   data () {
     return {
       text: '',
@@ -28,11 +32,13 @@ export default {
       error: ''
     }
   },
+
   watch: {
     text (v) {
       this.$emit('input', v)
     }
   },
+
   methods: {
     auto$ValidateForm () {
       // defind this method，The el-auto-form will auto call it~

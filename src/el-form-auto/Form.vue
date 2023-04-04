@@ -1,230 +1,242 @@
 <template>
-  <div class="form" :style="style">
-    <el-form
-        v-if="_value"
-        ref="form"
-        style="background: none"
-        :model="_value"
-        :disabled="disabled"
-        :size="size"
-        :label-position="labelPosition"
-    >
-      <form-item
-          ref="formItem"
-          v-for="(descriptor, key) in descriptors"
-          :key="key"
-          v-model="_value[key]"
-          :data="value"
-          :lang="lang"
-          :label="descriptor.label || key"
-          :prop="key"
-          :label-width="labelWidth"
-          :descriptor="descriptor"
-          :size="size"
-          :background-color="backgroundColor"
-          :bg-color-offset="bgColorOffset"
-          :show-outer-error="showOuterError"
-          @fieldInput="e=>$emit('fieldInput',e)"
-      >
-        <!--pass the parent's slots to child component-->
-        <template
-            v-for="(_, name) in $scopedSlots"
-            v-slot:[name]="data"
+    <div class="form" :style="style">
+        <el-form
+                v-if="value"
+                ref="form"
+                style="background: none"
+                v-model="value"
+                :disabled="disabled"
+                :size="size"
+                :label-position="labelPosition"
         >
-          <slot :name="name" v-bind="data"/>
-        </template>
-      </form-item>
+            <form-item
+                    ref="formItems"
+                    v-for="(descriptor, key) in descriptors"
+                    :key="key"
+                    :model-value="value[key]"
+                    @update:modelValue="updateValue(key, $event)"
+                    :data="value"
+                    :lang="lang"
+                    :label="descriptor.label || key"
+                    :prop="key"
+                    :label-width="labelWidth"
+                    :descriptor="descriptor"
+                    :size="size"
+                    :background-color="backgroundColor"
+                    :bg-color-offset="bgColorOffset"
+                    :show-outer-error="showOuterError"
+                    @fieldInput="e=>$emit('fieldInput',e)"
+            >
+                <!--pass the parent's slots to child component-->
+                <template
+                        v-for="(_, name) in $slots" v-slot:[name]="data"
+                >
+                    <slot :name="name" v-bind="data"/>
+                </template>
+            </form-item>
 
-      <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
-        <slot name="operations"/>
-      </el-form-item>
-    </el-form>
-  </div>
+            <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
+                <slot name="operations"/>
+            </el-form-item>
+        </el-form>
+    </div>
 </template>
 
 <script>
-import { isComplexDataType, getLabelWidth, fixValue } from '../util/utils'
-import FormItem from './FormItem.vue'
+import FormItem from '@/el-form-auto/FormItem.vue'
 
 export default {
   name: 'ElFormAuto',
   components: {
     FormItem
-  },
-  props: {
-    value: {
-      type: Object,
-      required: true
+  }
+}
+</script>
+
+<script setup>
+import {isComplexDataType, getLabelWidth, fixValue} from '../util/utils'
+import {ref, watch, computed, reactive} from 'vue'
+
+const props = defineProps({
+    modelValue: {
+        type: Object,
+        required: true
     },
     lang: {
-      type: String,
-      default: 'zh_CN'
+        type: String,
+        default: 'zh_CN'
     },
     disabled: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     },
     /**
      * descriptor of data
      */
     descriptors: {
-      type: Object,
-      required: true
+        type: Object,
+        required: true
     },
     /**
      * size of the input component
      */
     size: {
-      type: String,
-      default: 'small'
+        type: String,
+        default: 'small'
     },
     /**
      * show label position
      * [top, left ,right]
      */
     labelPosition: {
-      type: String,
-      default: 'right'
+        type: String,
+        default: 'right'
     },
     /**
      * background-color of form
      */
     backgroundColor: {
-      type: String,
-      default: '#FFFFFF'
+        type: String,
+        default: '#FFFFFF'
     },
     /**
      * font-size of form
      */
     fontSize: {
-      type: Number,
-      default: 13
+        type: Number,
+        default: 13
     },
     /**
      * whether show parent component's error, default true
      */
     showOuterError: {
-      type: Boolean,
-      default: true
+        type: Boolean,
+        default: true
     },
     /**
      * darken sub-form's background-color with offset while get positive integer
      */
     bgColorOffset: {
-      type: Number,
-      default: 8
+        type: Number,
+        default: 8
     }
-  },
-  data () {
-    return {
-      doValidate: false
+})
+
+// const emit = defineEmits(['update:modelValue', 'fieldInput'])
+
+const doValidate = ref(false)
+
+const form = ref(null)
+const formItems = ref(null)
+
+watch(
+    () => props.descriptors,
+    () => {
+        init()
     }
-  },
-  watch: {
-    descriptors () {
-      this.init()
-    }
-  },
-  computed: {
-    _value: {
-      get () {
-        return this.value
-      },
-      set (value) {
-        this.$emit('input', value)
-      }
-    },
-    rules () {
-      const r = {}
-      for (const prop in this.descriptors) {
-        const rules = this.descriptors[prop].rules
-        if (rules) {
-          r[prop] = rules
-        }
-      }
-      return r
-    },
-    labelWidth () {
-      return getLabelWidth(this.descriptors, this.fontSize)
-    },
-    style () {
-      const style = {
-        fontSize: `${this.fontSize}px`,
-        backgroundColor: this.backgroundColor
-      }
-      return style
-    }
-  },
-  created () {
-    this.init()
-  },
-  mounted () {
-  },
-  methods: {
-    init () {
-      this.initValue()
-    },
-    initValue () {
-      for (const key in this.descriptors) {
-        this.setValueKey(this, this._value, key, this.descriptors[key])
-      }
-    },
-    setValueKey (target, value, key, descriptor) {
-      if (isComplexDataType(descriptor.type)) {
-        if (descriptor.type === 'object') {
-          // object
-          if (descriptor.fields) {
-            // normal object
-            if (value[key] === undefined) {
-              target.$set(value, key, {})
-            }
-            for (const _key in descriptor.fields) {
-              target.setValueKey(target, value[key], _key, descriptor.fields[_key])
-            }
-          } else {
-            // hashmap
-            if (value[key] === undefined) {
-              target.$set(value, key, {})
-            }
-          }
-        } else {
-          // array
-          if (value[key] === undefined) {
-            target.$set(value, key, [])
-          }
-        }
-      } else if (descriptor.type === 'array') {
-        if (value[key] === undefined) {
-          target.$set(value, key, null)
-        }
-      } else {
-        target.$set(value, key, fixValue(undefined, descriptor))
-      }
-    },
-    validate () {
-      // validate main form
-      const promises = []
-      promises.push(new Promise((resolve, reject) => {
-        this.$refs.form.validate(valid => {
-          resolve(valid)
-        })
-      }))
-      // validate form in slot
-      const formItems = this.$refs['formItem']
-      for (let formItem of formItems) {
-        promises.push(formItem.validateCustomComponent())
-      }
-      // correct if all valid
-      return Promise.all(promises).then(r => r.indexOf(false) === -1)
-    },
-    resetFields () {
-      this.$refs.form.resetFields()
-    },
-    clearValidate () {
-      this.$refs.form.clearValidate()
-    }
-  }
+)
+
+const value = props.modelValue
+// const value = computed({
+//     get: () => props.modelValue,
+//     set: (value) => emit('update:modelValue', value)
+// })
+
+function updateValue(prop,v) {
+    console.log('form', v)
+    value[prop] = v
+    // emit('update:modelValue', v)
 }
+
+const rules = computed(() => {
+    const r = {}
+    for (const prop in props.descriptors) {
+        const rules = props.descriptors[prop].rules
+        if (rules) {
+            r[prop] = rules
+        }
+    }
+    return r
+})
+
+const labelWidth = computed(() => getLabelWidth(props.descriptors, props.fontSize))
+
+const style = computed(() => {
+    return {
+        fontSize: `${props.fontSize}px`,
+        backgroundColor: props.backgroundColor
+    }
+})
+
+const init = () => {
+    initValue()
+}
+
+const initValue = () => {
+    for (const key in props.descriptors) {
+        setValueKey(value, key, props.descriptors[key])
+    }
+}
+
+const setValueKey = (refValue, fieldKey, descriptor) => {
+    if (isComplexDataType(descriptor.type)) {
+        if (descriptor.type === 'object') {
+            // object
+            if (descriptor.fields) {
+                // normal object
+                if (refValue[fieldKey] === undefined) {
+                    refValue[fieldKey] = reactive({})
+                }
+                for (const subFieldKey in descriptor.fields) {
+                    setValueKey(refValue[fieldKey], subFieldKey, descriptor.fields[subFieldKey])
+                }
+            } else {
+                // hashmap
+                if (refValue[fieldKey] === undefined) {
+                    refValue[fieldKey] = reactive({})
+                }
+            }
+        } else {
+            // array
+            if (refValue[fieldKey] === undefined) {
+                refValue[fieldKey] = reactive([])
+            }
+        }
+    } else if (descriptor.type === 'array') {
+        if (refValue[fieldKey] === undefined) {
+            refValue[fieldKey] = ref([])
+        }
+    } else {
+        refValue[fieldKey] = fixValue(undefined, descriptor)
+    }
+}
+
+function validate() {
+    // validate main form
+    const promises = []
+    promises.push(new Promise((resolve, reject) => {
+        this.$refs.form.validate(valid => {
+            resolve(valid)
+        })
+    }))
+    // validate form in slot
+    for (let formItem of formItems) {
+        promises.push(formItem.validateCustomComponent())
+    }
+    // correct if all valid
+    return Promise.all(promises).then(r => r.indexOf(false) === -1)
+}
+
+function resetFields() {
+    form.value.resetFields()
+}
+
+function clearValidate() {
+    form.value.clearValidate()
+}
+
+init()
+
 </script>
 
 <style lang="scss">

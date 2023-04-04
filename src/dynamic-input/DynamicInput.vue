@@ -1,162 +1,164 @@
 <template>
   <!--dynamic component which already register-->
-  <component
-    :is="_name"
-    v-if="!isSpecialType||(descriptor.component && descriptor.component.name)"
-    v-model="_value"
-    class="dynamic-input"
-    v-bind="_bind"
-    :size="size"
-    v-on="_on"
-  >
-    <dynamic-component v-for="(component, index) in _children" :key="index" :component="component" />
-  </component>
+    <component
+            :is="name"
+            v-if="!isSpecialType||(descriptor.component && descriptor.component.name)"
+            :model-value="props.modelValue"
+            @update:modelValue="updateValue"
+            class="dynamic-input"
+            v-bind="bind"
+            :size="size"
+            v-on="on"
+    >
+        <dynamic-component v-for="(component, index) in children"
+                           :key="index" :component="component"/>
+    </component>
   <!-- enum type use el-select -->
-  <el-select
-    v-else-if="descriptor.type === 'enum'"
-    v-model="_value"
-    class="dynamic-input"
-    v-bind="_bind"
-    :class="{'multi-select': descriptor.multiple}"
-    :size="size"
-    :multiple="descriptor.multiple"
-    v-on="_on"
-  >
-    <el-option
-      v-for="option in _options"
-      :key="option.label"
-      :value="option.value"
-      :label="option.label"
-      :disabled="option.disabled"
-    />
-  </el-select>
+    <el-select
+            v-else-if="descriptor.type === 'enum'"
+            :model-value="props.modelValue"
+            @update:modelValue="updateValue"
+            class="dynamic-input"
+            v-bind="bind"
+            :class="{'multi-select': descriptor.multiple}"
+            :size="size"
+            :multiple="descriptor.multiple"
+            v-on="on"
+    >
+        <el-option
+                v-for="option in options"
+                :key="option.label"
+                :value="option.value"
+                :label="option.label"
+                :disabled="option.disabled"
+        />
+    </el-select>
   <!-- date type use el-date-picker -->
-  <el-date-picker
-    v-else-if="descriptor.type === 'date'"
-    v-model="_value"
-    class="dynamic-input"
-    type="datetime"
-    v-bind="_bind"
-    :size="size"
-    v-on="_on"
-  />
+    <el-date-picker
+            v-else-if="descriptor.type === 'date'"
+            :model-value="props.modelValue"
+            @update:modelValue="updateValue"
+            class="dynamic-input"
+            type="datetime"
+            v-bind="bind"
+            :size="size"
+            v-on="on"
+    />
 </template>
 
 <script>
 import DynamicComponent from '../dynamic-component/DynamicComponent.vue'
 
-const TYPE_COMPONENT_MAP = {
-  string: 'el-input',
-  number: 'el-input-number',
-  boolean: 'el-switch',
-  regexp: 'el-input',
-  integer: 'el-input-number',
-  float: 'el-input-number',
-  enum: 'el-select',
-  url: 'el-input'
-}
-
 export default {
   name: 'DynamicInput',
-  componentName: 'dynamic-input',
   components: {
     DynamicComponent
-  },
-  props: {
-    value: {
-      required: true
-    },
-    /**
-     * json's field
-     */
-    field: {
-      type: String,
-      required: true
-    },
-    size: {
-      type: String,
-      default: 'small'
-    },
-    descriptor: {
-      type: Object,
-      required: true
-    }
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    _value: {
-      get () {
-        return this.value
-      },
-      set (value) {
-        this.$emit('input', value)
-      }
-    },
-    _name () {
-      if (!this.descriptor.component || !this.descriptor.component.name) {
-        return TYPE_COMPONENT_MAP[this.descriptor.type] || 'el-input'
-      } else {
-        return this.descriptor.component.name
-      }
-    },
-    _options () {
-      if (this.descriptor.enum || this.descriptor.options) {
-        const data = this.descriptor.options instanceof Array ? this.descriptor.options : this.descriptor.enum
-        return data.map(item => {
-          if (typeof item === 'object') {
-            return item
-          } else {
-            return { label: item, value: item }
-          }
-        })
-      } else {
-        return []
-      }
-    },
-    _bind () {
-      const data = {};
-      /**
-       * Compatible with the version <= 2.2.0
-       * These props is the first level props of descriptor in old version
-       */
-      ['disabled', 'placeholder', 'autocomplete'].forEach(key => {
-        if (typeof this.descriptor[key] !== 'undefined') {
-          data[key] = this.descriptor[key]
-        }
-      })
-      const props = this.descriptor.component && this.descriptor.component.props
-        ? this.descriptor.component.props
-        : this.descriptor.props
-      return Object.assign(data, props)
-    },
-    _on (e) {
-      return this.descriptor.component && this.descriptor.component.events
-        ? this.descriptor.component.events
-        : (this.descriptor.events || {})
-    },
-    _children () {
-      if (!this.descriptor.component) {
-        return []
-      }
-      if (Array.isArray(this.descriptor.component.children)) {
-        return this.descriptor.component.children
-      }
-      if (typeof this.descriptor.component.children === 'string') {
-        return [this.descriptor.component.children]
-      }
-      return []
-    },
-    isSpecialType () {
-      return ['enum', 'date'].includes(this.descriptor.type)
-    }
-  },
-  created () {
-  },
-  methods: {
   }
 }
+
+</script>
+
+<script setup>
+import {defineComponent, computed, ref} from 'vue'
+
+const TYPE_COMPONENT_MAP = {
+    string: 'el-input',
+    number: 'el-input-number',
+    boolean: 'el-switch',
+    regexp: 'el-input',
+    integer: 'el-input-number',
+    float: 'el-input-number',
+    enum: 'el-select',
+    url: 'el-input'
+}
+
+const props = defineProps({
+    modelValue: {
+        required: true
+    },
+    field: {
+        type: String,
+        required: true
+    },
+    size: {
+        type: String,
+        default: 'small'
+    },
+    descriptor: {
+        type: Object,
+        required: true
+    }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const updateValue = (v) => {
+    // value.value = value
+    console.log('dynamicInput', v)
+    emit('update:modelValue', v)
+}
+
+const name = computed(() => {
+    if (!props.descriptor.component || !props.descriptor.component.name) {
+        return TYPE_COMPONENT_MAP[props.descriptor.type] || 'el-input'
+    } else {
+        return props.descriptor.component.name
+    }
+})
+
+const options = computed(() => {
+    if (props.descriptor.enum || props.descriptor.options) {
+        const data = props.descriptor.options instanceof Array ? props.descriptor.options : props.descriptor.enum
+        return data.map(item => {
+            if (typeof item === 'object') {
+                return item
+            } else {
+                return {label: item, value: item}
+            }
+        })
+    } else {
+        return []
+    }
+})
+
+const keys = ['disabled', 'placeholder', 'autocomplete']
+
+const bind = computed(() => {
+    const data = {}
+    keys.forEach(key => {
+        if (typeof props.descriptor[key] !== 'undefined') {
+            data[key] = props.descriptor[key]
+        }
+    })
+    const propsData = props.descriptor.component && props.descriptor.component.props
+        ? props.descriptor.component.props
+        : props.descriptor.props
+    return Object.assign(data, propsData)
+})
+
+const on = computed(() => {
+    return props.descriptor.component && props.descriptor.component.events
+        ? props.descriptor.component.events
+        : (props.descriptor.events || {})
+})
+
+const children = computed(() => {
+    if (!props.descriptor.component) {
+        return []
+    }
+    if (Array.isArray(props.descriptor.component.children)) {
+        return props.descriptor.component.children
+    }
+    if (typeof props.descriptor.component.children === 'string') {
+        return [props.descriptor.component.children]
+    }
+    return []
+})
+
+const isSpecialType = computed(() => {
+    return ['enum', 'date'].includes(props.descriptor.type)
+})
+
 </script>
 
 <style lang="scss" scoped>
