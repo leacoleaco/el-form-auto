@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { ElButton, ElFormItem } from 'element-plus'
+import { ElButton, ElInput, ElFormItem } from 'element-plus'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
@@ -173,7 +173,8 @@ export default {
   components: {
     DynamicInput,
     ElButton,
-    ElFormItem
+    ElFormItem,
+    ElInput
   }
 }
 </script>

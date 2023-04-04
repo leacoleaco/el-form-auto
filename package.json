@@ -1,6 +1,6 @@
 {
   "name": "le-auto-form",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Dynamic Load Element Form for Vue3",
   "main": "lib/LeAutoForm.umd.js",
   "files": [
