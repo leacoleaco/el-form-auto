@@ -43,16 +43,17 @@
 </template>
 
 <script>
+import { ElForm, ElFormItem } from 'element-plus'
 import FormItem from '@/le-auto-form/FormItem.vue'
 
 export default {
   name: 'LeAutoForm',
   components: {
-    FormItem
+    FormItem,
+    ElForm,
+    ElFormItem
   },
-  methods: {
-
-  }
+  methods: {}
 
 }
 </script>
@@ -232,11 +233,11 @@ function validate() {
     return Promise.all(promises).then(r => r.indexOf(false) === -1)
 }
 
-function resetFields () {
+function resetFields() {
     refForm.value.resetFields()
 }
 
-function clearValidate () {
+function clearValidate() {
     refForm.value.clearValidate()
 }
 

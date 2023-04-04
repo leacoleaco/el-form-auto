@@ -76,17 +76,17 @@ export function createDescriptorRefData (descriptor) {
     if (descriptor.type === 'object') {
       // for object
       if (descriptor.fields) {
-        const data = {}
+        const data = reactive({})
         for (const key in descriptor.fields) {
           data[key] = createDescriptorRefData(descriptor.fields[key])
         }
         return data
       } else if (descriptor.itemDescriptor) {
-        return {}
+        return reactive({})
       }
     } else if (descriptor.type === 'array') {
       // for array
-      return []
+      return reactive([])
     }
   }
   return fixValue(undefined, descriptor)

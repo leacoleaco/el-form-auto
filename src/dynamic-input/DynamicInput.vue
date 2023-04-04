@@ -48,11 +48,18 @@
 
 <script>
 import DynamicComponent from '../dynamic-component/DynamicComponent.vue'
+import { ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElSwitch } from 'element-plus'
 
 export default {
   name: 'DynamicInput',
   components: {
-    DynamicComponent
+    DynamicComponent,
+    ElInput,
+    ElInputNumber,
+    ElSelect,
+    ElOption,
+    ElDatePicker,
+    ElSwitch
   }
 }
 

@@ -43,13 +43,13 @@
         <!-- if type is array -->
         <template v-else-if="descriptor.type === 'array'">
             <div v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
-                class="multi-select"
+                 class="multi-select"
             >
                 <dynamic-input
-                    :model-value="props.modelValue"
-                    @update:modelValue="updateValue"
-                    :size="size"
-                    :descriptor="descriptor.itemDescriptor"
+                        :model-value="props.modelValue"
+                        @update:modelValue="updateValue"
+                        :size="size"
+                        :descriptor="descriptor.itemDescriptor"
                 />
             </div>
             <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
@@ -165,12 +165,15 @@
 </template>
 
 <script>
+import { ElButton, ElFormItem } from 'element-plus'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
   name: 'LeAutoFormItem',
   components: {
-    DynamicInput
+    DynamicInput,
+    ElButton,
+    ElFormItem
   }
 }
 </script>

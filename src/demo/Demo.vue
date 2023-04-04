@@ -52,7 +52,7 @@
 
                         <!--use custom slot name for custom component-->
                         <template #customSlotName="{value,setValue,data, placeholder}">
-                            {{value}}
+                            {{ value }}
                             <el-time-select
                                     :model-value="value"
                                     @update:modelValue="setValue"
@@ -64,8 +64,8 @@
                         <!--use custom slot name for custom component-->
                         <template #field$custom3="{value,setValue,data, placeholder}">
                             <custom-component
-                                :model-value="value"
-                                @update:modelValue="setValue"
+                                    :model-value="value"
+                                    @update:modelValue="setValue"
                             >
                             </custom-component>
                         </template>
@@ -88,11 +88,11 @@
 <script>
 import ElFormAuto from '@/le-auto-form/Form.vue'
 import CustomComponent from '@/demo/CustomComponent.vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton } from 'element-plus'
 
 export default {
   name: 'Demo',
-  components: { CustomComponent, ElFormAuto },
+  components: { CustomComponent, ElFormAuto, ElRow, ElCol, ElTimeSelect, ElInput, ElButton },
   data () {
     return {
       data: {
@@ -273,6 +273,7 @@ const descriptors = reactive({
 const myInputDescriptorConfig = ref({})
 
 myInputDescriptorConfig.value = JSON.stringify(descriptors, null, 2)
+
 function updateFormByMyInputDescriptorConfig() {
     try {
         descriptors.value = JSON.parse(myInputDescriptorConfig.value)
