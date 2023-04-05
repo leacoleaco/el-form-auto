@@ -59,7 +59,7 @@ export default {
 </script>
 
 <script setup>
-import {isComplexDataType, getLabelWidth, fixValue} from '../util/utils'
+import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
 import {ref, isRef, isReactive, watch, computed, reactive, provide, inject, onMounted} from 'vue'
 
 const props = defineProps({
@@ -134,8 +134,6 @@ const props = defineProps({
     }
 })
 
-// const emit = defineEmits(['update:modelValue', 'fieldInput'])
-
 const doValidate = ref(false)
 
 const refForm = ref(null)
@@ -149,14 +147,9 @@ watch(
 )
 
 const value = props.modelValue
-// const value = computed({
-//     get: () => props.modelValue,
-//     set: (value) => emit('update:modelValue', value)
-// })
 
 function updateValue(prop, v) {
     value[prop] = v
-    // emit('update:modelValue', v)
 }
 
 const rules = computed(() => {
@@ -229,12 +222,7 @@ function setValueKey(refValue, fieldKey, descriptor) {
         }
     }
 
-    if (refValueElement === null) {
-        refValue[fieldKey] = reactive(null)
-        return
-    }
-
-    refValue[fieldKey] = fixValue(undefined, descriptor)
+    refValue[fieldKey] = makeRefValueFromDescriptor(refValueElement, descriptor)
 }
 
 init()

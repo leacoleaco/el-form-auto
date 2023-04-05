@@ -188,7 +188,7 @@ export default {
 
 <script setup>
 import {computed, onMounted, ref, watch} from "vue";
-import {createDescriptorRefData, darkenColor, fixValue, getLabelWidth, isComplexDataType} from "@/util/utils";
+import {createDescriptorRefData, darkenColor, makeRefValueFromDescriptor, getLabelWidth, isComplexDataType} from "@/util/utils";
 
 import PlusIcon from '@/asserts/icons/circle-plus.svg'
 import CloseIcon from '@/asserts/icons/circle-close.svg'
@@ -321,7 +321,7 @@ watch(
 //     () => props.modelValue,
 //     (v) => {
 //         if(value){
-//             value = fixValue(v, props.descriptor)
+//             value = makeRefValueFromDescriptor(v, props.descriptor)
 //         }
 //     }
 // )
