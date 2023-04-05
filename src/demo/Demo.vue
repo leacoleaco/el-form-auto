@@ -52,7 +52,9 @@
 
                         <!--use custom slot name for custom component-->
                         <template #customSlotName="{value,setValue,data, placeholder}">
-                            {{ value }}
+                            <div>
+                                custom2: {{ value }}
+                            </div>
                             <el-time-select
                                     :model-value="value"
                                     @update:modelValue="setValue"

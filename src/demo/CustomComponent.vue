@@ -19,10 +19,10 @@ export default {
 </script>
 
 <script setup>
-import {defineProps, defineEmits, defineExpose, ref, watch} from 'vue'
+import {defineProps, defineEmits, defineExpose, ref, watch, onMounted, inject} from 'vue'
 
 const props = defineProps({
-    value: {
+    modelValue: {
         type: String,
         default: ''
     }
@@ -30,7 +30,7 @@ const props = defineProps({
 
 const emit = defineEmits(['input'])
 
-const text = ref(props.value)
+const text = ref(props.modelValue)
 const hasErr = ref(false)
 const error = ref('')
 
@@ -38,29 +38,33 @@ watch(() => text, (v) => {
     text.value = v
 })
 
-function auto$ValidateForm() {
+function validateThis() {
     // defind this method，The el-auto-form will auto call it~
-    const _this = this
     return new Promise(function (resolve, reject) {
-        const valid = _this.text === 'rico'
+        const valid = text.value === 'rico'
         if (!valid) {
-            _this.hasErr = true
-            _this.error = 'you need to input "rico"'
+            hasErr.value = true
+            error.value = 'you need to input "rico"'
         } else {
-            _this.hasErr = false
-            _this.error = ''
+            hasErr.value = false
+            error.value = ''
         }
         resolve(valid)
     })
 }
 
+onMounted(() => {
+    //inject auto validation
+    const injectAutoValidationForm = inject('leaAutoValidationForm')
+    if (injectAutoValidationForm) {
+        injectAutoValidationForm.value.push(validateThis)
+    }
+})
+
 function onChange(e) {
-    emit('input', e.target.value)
+    emit('update:modelValue', e.target.value)
 }
 
-defineExpose({
-    auto$ValidateForm
-})
 </script>
 
 <style scoped>

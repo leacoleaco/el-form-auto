@@ -18,6 +18,8 @@
                     :name="descriptor.slotName"
                     :value="value"
                     :setValue="updateValue"
+                    :modelValue="value"
+                    :updateModelValue="updateValue"
                     :data="data"
                     :placeholder="descriptor.placeholder"
             />
@@ -26,6 +28,8 @@
                     :name="'field$'+prop"
                     :value="value"
                     :setValue="updateValue"
+                    :modelValue="value"
+                    :updateModelValue="updateValue"
                     :data="data"
                     :placeholder="descriptor.placeholder"
             />
