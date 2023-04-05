@@ -26,11 +26,11 @@
             v-on="on"
     >
         <el-option
-                v-for="option in options"
-                :key="option.label"
-                :value="option.value"
-                :label="option.label"
-                :disabled="option.disabled"
+                v-for="option in props.descriptor.options"
+                :key="(typeof option ==='object')?option.label:option"
+                :value="(typeof option ==='object')?option.value:option"
+                :label="(typeof option ==='object')?option.label:option"
+                :disabled="(typeof option==='object')?option.disabled:false"
         />
     </el-select>
   <!-- date type use el-date-picker -->
@@ -111,20 +111,20 @@ const name = computed(() => {
     }
 })
 
-const options = computed(() => {
-    if (props.descriptor.enum || props.descriptor.options) {
-        const data = props.descriptor.options instanceof Array ? props.descriptor.options : props.descriptor.enum
-        return data.map(item => {
-            if (typeof item === 'object') {
-                return item
-            } else {
-                return {label: item, value: item}
-            }
-        })
-    } else {
-        return []
-    }
-})
+// const options = computed(() => {
+//     if (props.descriptor.enum || props.descriptor.options) {
+//         const data = props.descriptor.options instanceof Array ? props.descriptor.options : props.descriptor.enum
+//         return data.map(item => {
+//             if (typeof item === 'object') {
+//                 return item
+//             } else {
+//                 return {label: item, value: item}
+//             }
+//         })
+//     } else {
+//         return []
+//     }
+// })
 
 const keys = ['disabled', 'placeholder', 'autocomplete']
 

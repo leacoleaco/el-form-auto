@@ -18,8 +18,11 @@
                 <el-button @click="data.field_str='123'" size="small" style="margin-top:10px">
                     set_field_str
                 </el-button>
+                <el-button @click="descriptors.enum1.options=['a','b','c']" size="small" style="margin-top:10px">
+                    set_enum_options
+                </el-button>
 
-                <el-button @click="data={}" size="small" style="margin-top:10px">
+                <el-button @click=" Object.keys(data).map(key => { delete data[key] })" size="small" style="margin-top:10px">
                     clearData
                 </el-button>
             </el-col>
@@ -298,7 +301,8 @@ myInputDescriptorConfig.value = JSON.stringify(descriptors, null, 2)
 
 function updateFormByMyInputDescriptorConfig() {
     try {
-        descriptors.value = JSON.parse(myInputDescriptorConfig.value)
+        let newDescriptors = JSON.parse(myInputDescriptorConfig.value);
+        Object.assign(descriptors, newDescriptors)
         ElMessage.success({
             message: 'regenerate finish! '
         })
