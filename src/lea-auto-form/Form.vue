@@ -278,12 +278,12 @@ function validateCurrentForm() {
  */
 const provideAutoValidationForm = ref([]);
 // () => Promise.resolve(true)
-provide('autoValidationForm', provideAutoValidationForm);
+provide('leaAutoValidationForm', provideAutoValidationForm);
 
 if (!props.disableValidateChildrenForm) {
     onMounted(() => {
         //inject auto validation
-        const injectAutoValidationForm = inject('autoValidationForm')
+        const injectAutoValidationForm = inject('leaAutoValidationForm')
         if (injectAutoValidationForm) {
             injectAutoValidationForm.value.push(validateCurrentForm)
         }
