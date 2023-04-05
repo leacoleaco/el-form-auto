@@ -16,9 +16,9 @@
             <slot
                     v-if="$slots[descriptor.slotName]"
                     :name="descriptor.slotName"
-                    :value="value"
+                    :value="props.modelValue"
                     :setValue="updateValue"
-                    :modelValue="value"
+                    :modelValue="props.modelValue"
                     :updateModelValue="updateValue"
                     :data="data"
                     :placeholder="descriptor.placeholder"
@@ -26,16 +26,15 @@
             <slot
                     v-else
                     :name="'field$'+prop"
-                    :value="value"
+                    :value="props.modelValue"
                     :setValue="updateValue"
-                    :modelValue="value"
+                    :modelValue="props.modelValue"
                     :updateModelValue="updateValue"
                     :data="data"
                     :placeholder="descriptor.placeholder"
             />
         </div>
         <!--simple type -->
-        <!--                v-model="value"-->
         <dynamic-input
                 v-else-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
                 :model-value="props.modelValue"
@@ -58,9 +57,9 @@
             </div>
             <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
                 <form-item
-                        v-for="(temp, key) in value"
+                        v-for="(temp, key) in props.modelValue"
                         :key="key"
-                        v-model="value[key]"
+                        v-model="props.modelValue[key]"
                         :data="data"
                         :prop="prop ? prop + '.' + key : key"
                         :deletable="true"
@@ -80,8 +79,8 @@
                     </template>
                 </form-item>
                 <div class="add-key-input-group">
-                    <el-button type="primary" icon="el-icon-plus" :size="size" plain @click="addArrayItem">
-                        {{ descriptor.addButtonText || 'add' }}
+                    <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
+                        <img :src="PlusIcon" class="icon"/>{{ descriptor.addButtonText || 'add' }}
                     </el-button>
                 </div>
             </div>
@@ -97,7 +96,7 @@
                 <form-item
                         v-for="(_descriptor, key) in descriptor.fields"
                         :key="key"
-                        v-model="value[key]"
+                        v-model="props.modelValue[key]"
                         :data="data"
                         :label="_descriptor.label || key"
                         :prop="prop ? prop + '.' + key : key"
@@ -123,16 +122,16 @@
                     :style="{backgroundColor: subFormBackgroundColor}"
             >
                 <form-item
-                        v-for="key in value"
+                        v-for="key in props.modelValue"
                         :ref="prop + '.' + key"
                         :key="key"
-                        v-model="value[key]"
+                        v-model="props.modelValue[key]"
                         :data="data"
                         :label="key"
                         :prop="prop ? prop + '.' + key : key"
                         :deletable="true"
                         :descriptor="descriptor.itemDescriptor"
-                        :label-width="getLabelWidth(value, fontSize)"
+                        :label-width="getLabelWidth(props.modelValue, fontSize)"
                         :background-color="subFormBackgroundColor"
                         :show-outer-error="showOuterError"
                         @delete="deleteKey(key)"
@@ -151,25 +150,29 @@
                         <el-input v-model="hashMapKey" :placeholder="descriptor.mapKeyPlaceHolder || 'key name'"
                                   :size="size"/>
                         <el-button
-                                type="primary"
-                                icon="el-icon-plus"
-                                :size="size"
-                                :disabled="!hashMapKey || value[hashMapKey] !== undefined"
-                                plain
-                                @click="addHashMapKey"
+                            class="addButton"
+                            type="primary"
+                            :icon="Plus"
+                            :size="size"
+                            :disabled="!hashMapKey || props.modelValue[hashMapKey] !== undefined"
+                            plain
+                            @click="addHashMapKey"
                         >
-                            {{ descriptor.addButtonText || 'add' }}
+                            <img :src="PlusIcon" class="icon"/> {{ descriptor.addButtonText || 'add' }}
                         </el-button>
                     </div>
                 </el-form-item>
             </div>
         </template>
-        <el-button v-if="deletable" class="delete-button" link icon="el-icon-close" @click="emitDelete"/>
+        <el-button v-if="deletable" class="delete-button" link :icon="Close" @click="emitDelete">
+            <img :src="CloseIcon" class="icon"/>
+        </el-button>
     </el-form-item>
 </template>
 
 <script>
 import { ElButton, ElInput, ElFormItem } from 'element-plus'
+
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
@@ -186,6 +189,12 @@ export default {
 <script setup>
 import {computed, onMounted, ref, watch} from "vue";
 import {createDescriptorRefData, darkenColor, fixValue, getLabelWidth, isComplexDataType} from "@/util/utils";
+
+import PlusIcon from '@/asserts/icons/circle-plus.svg'
+import CloseIcon from '@/asserts/icons/circle-close.svg'
+
+// const PlusIcon = PlusIcon
+// const CloseIcon = CloseIcon
 
 const hashMapKey = ref('')
 
@@ -284,10 +293,6 @@ const props = defineProps({
     }
 })
 
-// console.assert(props.modelValue !== undefined, `绑定 ${props.prop} 时, modelValue 不能为undefined`)
-
-const value = props.modelValue
-
 function updateValue(v) {
     emit('update:modelValue', v)
     emit('fieldInput', {
@@ -330,7 +335,7 @@ function resetField() {
 }
 
 function addHashMapKey() {
-    value[hashMapKey.value] = createDescriptorRefData(
+    props.modelValue[hashMapKey.value] = createDescriptorRefData(
         props.descriptor.itemDescriptor
     )
     hashMapKey.value = ''
@@ -339,7 +344,7 @@ function addHashMapKey() {
 
 function addArrayItem() {
     const item = createDescriptorRefData(props.descriptor.itemDescriptor)
-    value.push(item)
+    props.modelValue.push(item)
 }
 
 function emitDelete() {
@@ -347,11 +352,11 @@ function emitDelete() {
 }
 
 function deleteKey(key) {
-    delete value[key]
+    delete props.modelValue[key]
 }
 
 function deleteItem(index) {
-    value.splice(index, 1)
+    props.modelValue.splice(index, 1)
 }
 
 function validateCustomComponent() {
@@ -423,6 +428,19 @@ defineExpose({
   font-size: 20px;
   color: #F56C6C;
   padding: 5px 0;
+
+  .icon {
+      color: #F56C6C;
+      width:13px;
+      height:13px;
+  }
+}
+
+.addButton{
+    .icon{
+        width:13px;
+        height:13px;
+    }
 }
 
 .delete-button:hover {
@@ -433,4 +451,5 @@ defineExpose({
   top: auto;
   right: auto;
 }
+
 </style>
