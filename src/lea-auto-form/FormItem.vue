@@ -169,7 +169,7 @@ import { ElButton, ElInput, ElFormItem } from 'element-plus'
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
 export default {
-  name: 'LeAutoFormItem',
+  name: 'LeaAutoFormItem',
   components: {
     DynamicInput,
     ElButton,

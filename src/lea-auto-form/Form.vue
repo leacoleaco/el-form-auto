@@ -44,10 +44,10 @@
 
 <script>
 import { ElForm, ElFormItem } from 'element-plus'
-import FormItem from '@/le-auto-form/FormItem.vue'
+import FormItem from '@/lea-auto-form/FormItem.vue'
 
 export default {
-  name: 'LeAutoForm',
+  name: 'LeaAutoForm',
   components: {
     FormItem,
     ElForm,
@@ -60,7 +60,7 @@ export default {
 
 <script setup>
 import {isComplexDataType, getLabelWidth, fixValue} from '../util/utils'
-import {ref, watch, computed, reactive} from 'vue'
+import {ref, isRef, isReactive, watch, computed, reactive, provide, inject, onMounted} from 'vue'
 
 const props = defineProps({
     modelValue: {
@@ -124,6 +124,13 @@ const props = defineProps({
     bgColorOffset: {
         type: Number,
         default: 8
+    },
+    /**
+     * disable auto validate children form if true
+     */
+    disableValidateChildrenForm: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -172,52 +179,82 @@ const style = computed(() => {
     }
 })
 
-const init = () => {
+function init() {
     initValue()
 }
 
-const initValue = () => {
+function initValue() {
+    if (!isRef(value) && !isReactive(value)) {
+        throw Error(`auto form's value is not reacctive, you need use ref() or reactive()`)
+    }
     for (const key in props.descriptors) {
         setValueKey(value, key, props.descriptors[key])
     }
 }
 
-const setValueKey = (refValue, fieldKey, descriptor) => {
+function setValueKey(refValue, fieldKey, descriptor) {
+    if (!isRef(refValue) && !isReactive(refValue)) {
+        throw Error(`${fieldKey} 's value is not reacctive, you need use ref() or reactive()`)
+    }
+    const refValueElement = refValue[fieldKey]
     if (isComplexDataType(descriptor.type)) {
         if (descriptor.type === 'object') {
             // object
             if (descriptor.fields) {
                 // normal object
-                if (refValue[fieldKey] === undefined) {
+                if (refValueElement === undefined) {
                     refValue[fieldKey] = reactive({})
                 }
                 for (const subFieldKey in descriptor.fields) {
-                    setValueKey(refValue[fieldKey], subFieldKey, descriptor.fields[subFieldKey])
+                    setValueKey(refValueElement, subFieldKey, descriptor.fields[subFieldKey])
                 }
+                return
             } else {
                 // hashmap
-                if (refValue[fieldKey] === undefined) {
+                if (refValueElement === undefined) {
                     refValue[fieldKey] = reactive({})
+                    return
                 }
             }
         } else {
             // array
-            if (refValue[fieldKey] === undefined) {
+            if (refValueElement === undefined) {
                 refValue[fieldKey] = reactive([])
+                return
             }
         }
     } else if (descriptor.type === 'array') {
-        if (refValue[fieldKey] === undefined) {
+        if (refValueElement === undefined) {
             refValue[fieldKey] = ref([])
         }
-    } else {
-        refValue[fieldKey] = fixValue(undefined, descriptor)
     }
+
+    if (refValueElement === null) {
+        refValue[fieldKey] = reactive(null)
+        return
+    }
+
+    refValue[fieldKey] = fixValue(undefined, descriptor)
 }
 
 init()
 
+/**
+ * validate form and the children nested form
+ * @returns {Promise<boolean>}
+ */
 function validate() {
+    let promises = [validateCurrentForm, ...provideAutoValidationForm.value].map(it => it())
+    return Promise.all(promises).then(r => {
+        return r.indexOf(false) === -1
+    })
+}
+
+/**
+ * only validate current form, without nested form
+ * @returns {Promise<boolean>}
+ */
+function validateCurrentForm() {
     // validate main form
     const promises = []
     promises.push(new Promise((resolve, reject) => {
@@ -231,6 +268,26 @@ function validate() {
     }
     // correct if all valid
     return Promise.all(promises).then(r => r.indexOf(false) === -1)
+}
+
+/**
+ * validate form provide
+ * to inject into the sub form, which can be validated by the parent form
+ * see prop: disableValidateChildrenForm
+ * @returns {Promise<boolean>}
+ */
+const provideAutoValidationForm = ref([]);
+// () => Promise.resolve(true)
+provide('autoValidationForm', provideAutoValidationForm);
+
+if (!props.disableValidateChildrenForm) {
+    onMounted(() => {
+        //inject auto validation
+        const injectAutoValidationForm = inject('autoValidationForm')
+        if (injectAutoValidationForm) {
+            injectAutoValidationForm.value.push(validateCurrentForm)
+        }
+    })
 }
 
 function resetFields() {

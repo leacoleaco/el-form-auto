@@ -15,7 +15,7 @@ if (idx !== -1) {
   p = process.argv[idx + 1]
   copy('./package.json', p + '/package.json')
 }
-copy('./dist/LeAutoForm.umd.js', p + '/lib/LeAutoForm.umd.js')
-copy('./dist/LeAutoForm.umd.min.js', p + '/lib/LeAutoForm.umd.min.js')
+copy('./dist/LeaAutoForm.umd.js', p + '/lib/LeaAutoForm.umd.js')
+copy('./dist/LeaAutoForm.umd.min.js', p + '/lib/LeaAutoForm.umd.min.js')
 
 console.log('finish!')

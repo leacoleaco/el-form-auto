@@ -26,7 +26,7 @@
             <el-col :span="15">
                 <div>the form will auto generate by the descriptor we input:</div>
                 <div style="padding: 20px;background: #efefef">
-                    <el-form-auto
+                    <lea-auto-form
                             ref="refAutoForm"
                             :descriptors="descriptors"
                             v-model="data"
@@ -70,7 +70,16 @@
                             </custom-component>
                         </template>
 
-                    </el-form-auto>
+                        <template #nestedSlotName="{value,setValue,data, placeholder}">
+                            <div>
+                                <div>nested data: {{ value }}</div>
+                                <nested-component
+                                        :model-value="value"
+                                        @update:modelValue="setValue"/>
+                            </div>
+                        </template>
+
+                    </lea-auto-form>
                     <el-button @click="validate" type="primary">validate</el-button>
                     <el-button @click="clearValidate">clearValidate</el-button>
                     <el-button @click="resetFields">resetFields</el-button>
@@ -86,13 +95,14 @@
 </template>
 
 <script>
-import ElFormAuto from '@/le-auto-form/Form.vue'
+import LeaAutoForm from '@/lea-auto-form/Form.vue'
 import CustomComponent from '@/demo/CustomComponent.vue'
+import NestedComponent from '@/demo/NestedComponent.vue'
 import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton } from 'element-plus'
 
 export default {
   name: 'Demo',
-  components: { CustomComponent, ElFormAuto, ElRow, ElCol, ElTimeSelect, ElInput, ElButton },
+  components: { CustomComponent, NestedComponent, LeaAutoForm, ElRow, ElCol, ElTimeSelect, ElInput, ElButton },
   data () {
     return {
       data: {
@@ -200,6 +210,16 @@ const descriptors = reactive({
     custom3: {
         type: 'custom',
         defaultValue: 'July'
+    },
+    nested1: {
+        type: 'custom',
+        slotName: 'nestedSlotName',
+        defaultValue: {}
+    },
+    nested2: {
+        type: 'custom',
+        slotName: 'nestedSlotName',
+        defaultValue: {age: 18}
     },
     list1: {
         type: 'array',
