@@ -22,7 +22,8 @@
                     set_enum_options
                 </el-button>
 
-                <el-button @click=" Object.keys(data).map(key => { delete data[key] })" size="small" style="margin-top:10px">
+                <el-button @click=" Object.keys(data).map(key => { delete data[key] })" size="small"
+                           style="margin-top:10px">
                     clearData
                 </el-button>
             </el-col>
@@ -269,6 +270,20 @@ const descriptors = reactive({
                             }
                         }
                     ]
+                },
+                list2: {
+                    type: 'array',
+                    label: 'Nested Array Field',
+                    defaultValue: [],
+                    itemDescriptor: {
+                        type:'object',
+                        fields:{
+                            number6: {
+                                type: 'number',
+                                defaultValue: 2
+                            }
+                        }
+                    }
                 }
             }
         }

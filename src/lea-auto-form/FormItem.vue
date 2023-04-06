@@ -80,7 +80,7 @@
                 </form-item>
                 <div class="add-key-input-group">
                     <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
-                        <img :src="PlusIcon" class="icon"/>{{ descriptor.addButtonText || 'add' }}
+                        <add-icon class="icon"/>{{ descriptor.addButtonText || 'add' }}
                     </el-button>
                 </div>
             </div>
@@ -150,22 +150,21 @@
                         <el-input v-model="hashMapKey" :placeholder="descriptor.mapKeyPlaceHolder || 'key name'"
                                   :size="size"/>
                         <el-button
-                            class="addButton"
-                            type="primary"
-                            :icon="Plus"
-                            :size="size"
-                            :disabled="!hashMapKey || props.modelValue[hashMapKey] !== undefined"
-                            plain
-                            @click="addHashMapKey"
+                                class="addButton"
+                                type="primary"
+                                :size="size"
+                                :disabled="!hashMapKey || props.modelValue[hashMapKey] !== undefined"
+                                plain
+                                @click="addHashMapKey"
                         >
-                            <img :src="PlusIcon" class="icon"/> {{ descriptor.addButtonText || 'add' }}
+                            <add-icon class="icon"/> {{ descriptor.addButtonText || 'add' }}
                         </el-button>
                     </div>
                 </el-form-item>
             </div>
         </template>
-        <el-button v-if="deletable" class="delete-button" link :icon="Close" @click="emitDelete">
-            <img :src="CloseIcon" class="icon"/>
+        <el-button v-if="deletable" class="delete-button" link @click="emitDelete">
+            <close-icon class="icon"/>
         </el-button>
     </el-form-item>
 </template>
@@ -188,13 +187,16 @@ export default {
 
 <script setup>
 import {computed, onMounted, ref, watch} from "vue";
-import {createDescriptorRefData, darkenColor, makeRefValueFromDescriptor, getLabelWidth, isComplexDataType} from "@/util/utils";
+import {
+    createDescriptorRefData,
+    darkenColor,
+    makeRefValueFromDescriptor,
+    getLabelWidth,
+    isComplexDataType
+} from "@/util/utils";
 
-import PlusIcon from '@/asserts/icons/circle-plus.svg'
-import CloseIcon from '@/asserts/icons/circle-close.svg'
-
-// const PlusIcon = PlusIcon
-// const CloseIcon = CloseIcon
+import AddIcon from "@/components/AddIcon.vue";
+import CloseIcon from "@/components/CloseIcon.vue";
 
 const hashMapKey = ref('')
 
@@ -344,7 +346,11 @@ function addHashMapKey() {
 
 function addArrayItem() {
     const item = createDescriptorRefData(props.descriptor.itemDescriptor)
-    props.modelValue.push(item)
+    if (props.modelValue === undefined) {
+        emit('update:modelValue', [item])
+    }else{
+        props.modelValue.push(item)
+    }
 }
 
 function emitDelete() {
@@ -430,17 +436,17 @@ defineExpose({
   padding: 5px 0;
 
   .icon {
-      color: #F56C6C;
-      width:13px;
-      height:13px;
+    color: #F56C6C;
+    width: 13px;
+    height: 13px;
   }
 }
 
-.addButton{
-    .icon{
-        width:13px;
-        height:13px;
-    }
+.addButton {
+  .icon {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 .delete-button:hover {
