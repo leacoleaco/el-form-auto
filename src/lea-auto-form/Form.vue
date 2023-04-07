@@ -59,8 +59,20 @@ export default {
 </script>
 
 <script setup>
-import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
-import {ref, isRef, isReactive, watch, computed, reactive, provide, inject, onMounted} from 'vue'
+import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '@/util/utils'
+import {
+    ref,
+    isRef,
+    isReactive,
+    watch,
+    computed,
+    reactive,
+    provide,
+    inject,
+    onMounted,
+    onUnmounted,
+    getCurrentInstance
+} from 'vue'
 
 const props = defineProps({
     modelValue: {
@@ -232,7 +244,13 @@ init()
  * @returns {Promise<boolean>}
  */
 function validate() {
-    let promises = [validateCurrentForm, ...provideAutoValidationForm.value].map(it => it())
+    const promises = []
+    promises.push(validateCurrentForm())
+    childLeaAutoForms.value.forEach(f => {
+        if (f.exposed && f.exposed.validateCurrentForm) {
+            promises.push(f.exposed.validateCurrentForm())
+        }
+    })
     return Promise.all(promises).then(r => {
         return r.indexOf(false) === -1
     })
@@ -259,21 +277,32 @@ function validateCurrentForm() {
 }
 
 /**
- * validate form provide
- * to inject into the sub form, which can be validated by the parent form
+ * collect the children form's component
+ * in order to can be validated by the parent form
  * see prop: disableValidateChildrenForm
  * @returns {Promise<boolean>}
  */
-const provideAutoValidationForm = ref([]);
+const childLeaAutoForms = ref([]);
 // () => Promise.resolve(true)
-provide('leaAutoValidationForm', provideAutoValidationForm);
+provide('registLeaAutoForm', registerChild);
 
+function registerChild(component) {
+    childLeaAutoForms.value.push(component)
+}
+
+//inject regist
 if (!props.disableValidateChildrenForm) {
+    const registMe = inject('registLeaAutoForm')
+    const currentInstance = getCurrentInstance()
     onMounted(() => {
-        //inject auto validation
-        const injectAutoValidationForm = inject('leaAutoValidationForm')
-        if (injectAutoValidationForm) {
-            injectAutoValidationForm.value.push(validateCurrentForm)
+        if (typeof registMe === 'function') {
+            registMe(currentInstance)
+        }
+    })
+
+    onUnmounted(() => {
+        if (typeof registMe === 'function') {
+            registMe(null)
         }
     })
 }
@@ -288,6 +317,7 @@ function clearValidate() {
 
 defineExpose({
     validate,
+    validateCurrentForm,
     resetFields,
     clearValidate
 })
