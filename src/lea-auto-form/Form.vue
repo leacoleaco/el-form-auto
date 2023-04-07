@@ -283,28 +283,38 @@ function validateCurrentForm() {
  * @returns {Promise<boolean>}
  */
 const childLeaAutoForms = ref([]);
-// () => Promise.resolve(true)
 provide('registLeaAutoForm', registerChild);
 
-function registerChild(component) {
-    childLeaAutoForms.value.push(component)
+function registerChild(component, regist) {
+    if (regist) {
+        childLeaAutoForms.value.push(component)
+    } else {
+        debugger
+        for (let i = 0; i < childLeaAutoForms.value.length; i++) {
+            if (childLeaAutoForms.value[i].uid === component.uid) {
+                childLeaAutoForms.value.splice(i, 1);
+                break;
+            }
+        }
+    }
 }
 
 //inject regist
 if (!props.disableValidateChildrenForm) {
     const registMe = inject('registLeaAutoForm')
-    const currentInstance = getCurrentInstance()
-    onMounted(() => {
-        if (typeof registMe === 'function') {
-            registMe(currentInstance)
-        }
-    })
-
-    onUnmounted(() => {
-        if (typeof registMe === 'function') {
-            registMe(null)
-        }
-    })
+    if (registMe) {
+        const currentInstance = getCurrentInstance()
+        onMounted(() => {
+            if (typeof registMe === 'function') {
+                registMe(currentInstance, true)
+            }
+        })
+        onUnmounted(() => {
+            if (typeof registMe === 'function') {
+                registMe(currentInstance, false)
+            }
+        })
+    }
 }
 
 function resetFields() {

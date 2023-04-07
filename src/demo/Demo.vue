@@ -222,11 +222,7 @@ const descriptors = reactive({
         slotName: 'nestedSlotName',
         defaultValue: {}
     },
-    nested2: {
-        type: 'custom',
-        slotName: 'nestedSlotName',
-        defaultValue: {age: 18}
-    },
+
     list1: {
         type: 'array',
         label: 'Array Field',
@@ -281,7 +277,12 @@ const descriptors = reactive({
                             number6: {
                                 type: 'number',
                                 defaultValue: 2
-                            }
+                            },
+                            nested2: {
+                                type: 'custom',
+                                slotName: 'nestedSlotName',
+                                defaultValue: {age: 18}
+                            },
                         }
                     }
                 }
