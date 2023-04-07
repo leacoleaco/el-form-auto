@@ -289,7 +289,7 @@ if (!props.disableValidateChildrenForm) {
     registerInstance(instance)
 }
 
-publicRegisterInstance()
+publicRegisterInstance(instance)
 
 function resetFields() {
     refForm.value.resetFields()
