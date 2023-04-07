@@ -6,7 +6,7 @@ export function provideRegister (childLeaAutoForms) {
   function registerChild (component, regist) {
     if (regist) {
       childLeaAutoForms.value.push(component)
-      console.log(`registerLeaAutoFormSuccess, total:${childLeaAutoForms.value.size}`, component)
+      console.log(`registerLeaAutoFormSuccess, total:${childLeaAutoForms.value.length}`, component)
     } else {
       for (let i = 0; i < childLeaAutoForms.value.length; i++) {
         if (childLeaAutoForms.value[i].uid === component.uid) {
@@ -45,7 +45,7 @@ export function providePublicRegister (childLeaAutoForms) {
   function registerChild (component, regist) {
     if (regist) {
       childLeaAutoForms.value.push(component)
-      console.log(`registerLeaAutoFormSuccess total:${childLeaAutoForms.value.size}`, component)
+      console.log(`registerLeaAutoFormSuccess total:${childLeaAutoForms.value.length}`, component)
     } else {
       for (let i = 0; i < childLeaAutoForms.value.length; i++) {
         if (childLeaAutoForms.value[i].uid === component.uid) {
