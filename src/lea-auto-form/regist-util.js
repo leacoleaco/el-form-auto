@@ -75,5 +75,7 @@ export function publicRegisterInstance (instance) {
         registMeFun(instance, false)
       }
     })
+  } else {
+    console.warn('can not found publicRegisterLeaAutoForm, this form auto validation may not work', instance)
   }
 }
