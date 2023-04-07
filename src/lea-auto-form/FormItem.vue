@@ -364,43 +364,6 @@ function deleteKey(key) {
 function deleteItem(index) {
     props.modelValue.splice(index, 1)
 }
-
-function validateCustomComponent() {
-    const promises = []
-    const validateFuns = travelTreeValidateFun(this)
-    if (validateFuns && validateFuns.length) {
-        for (let fun of validateFuns) {
-            const r = fun()
-            if (r instanceof Promise) {
-                promises.push(r)
-            }
-        }
-    }
-    return Promise.all(promises).then((r) => r.indexOf(false) === -1)
-}
-
-function travelTreeValidateFun(root) {
-    let res = []
-    if (!res) return res
-    let queue = [root]
-    while (queue.length) {
-        let node = queue.pop()
-        if (node.auto$ValidateForm) {
-            res.push(node.auto$ValidateForm)
-        }
-        if (node.$children) {
-            for (let c of node.$children) {
-                queue.unshift(c)
-            }
-        }
-    }
-    return res
-}
-
-defineExpose({
-    validateCustomComponent
-})
-
 </script>
 
 <style lang="scss" scoped>

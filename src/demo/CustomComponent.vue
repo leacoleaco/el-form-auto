@@ -19,7 +19,8 @@ export default {
 </script>
 
 <script setup>
-import {defineProps, defineEmits, defineExpose, ref, watch, onMounted, inject} from 'vue'
+import {defineProps, defineEmits, defineExpose, ref, watch, getCurrentInstance} from 'vue'
+import {registerInstance} from "@/lea-auto-form/regist-util";
 
 const props = defineProps({
     modelValue: {
@@ -38,7 +39,10 @@ watch(() => text, (v) => {
     text.value = v
 })
 
-function validateThis() {
+const instance = getCurrentInstance()
+registerInstance(instance)
+
+function validateCurrentForm() {
     // defind this method，The el-auto-form will auto call it~
     return new Promise(function (resolve, reject) {
         const valid = text.value === 'rico'
@@ -53,12 +57,8 @@ function validateThis() {
     })
 }
 
-onMounted(() => {
-    //inject auto validation
-    const injectAutoValidationForm = inject('leaAutoValidationForm')
-    if (injectAutoValidationForm) {
-        injectAutoValidationForm.value.push(validateThis)
-    }
+defineExpose({
+    validateCurrentForm
 })
 
 function onChange(e) {

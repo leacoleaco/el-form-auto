@@ -73,6 +73,7 @@ import {
     onUnmounted,
     getCurrentInstance
 } from 'vue'
+import {provideRegister, publicRegisterInstance, registerInstance} from "@/lea-auto-form/regist-util";
 
 const props = defineProps({
     modelValue: {
@@ -247,7 +248,7 @@ function validate() {
     const promises = []
     promises.push(validateCurrentForm())
     childLeaAutoForms.value.forEach(f => {
-        if (f.exposed && f.exposed.validateCurrentForm) {
+        if (f && f.exposed && f.exposed.validateCurrentForm) {
             promises.push(f.exposed.validateCurrentForm())
         }
     })
@@ -262,18 +263,15 @@ function validate() {
  */
 function validateCurrentForm() {
     // validate main form
-    const promises = []
-    promises.push(new Promise((resolve, reject) => {
-        refForm.value.validate(valid => {
-            resolve(valid)
-        })
-    }))
-    // validate form in slot
-    for (let refFormItem of refFormItems.value) {
-        promises.push(refFormItem.validateCustomComponent())
-    }
-    // correct if all valid
-    return Promise.all(promises).then(r => r.indexOf(false) === -1)
+    return new Promise((resolve, reject) => {
+        if (refForm.value) {
+            refForm.value.validate(valid => {
+                resolve(valid)
+            })
+        } else {
+            resolve(true)
+        }
+    })
 }
 
 /**
@@ -283,38 +281,16 @@ function validateCurrentForm() {
  * @returns {Promise<boolean>}
  */
 const childLeaAutoForms = ref([]);
-provide('registLeaAutoForm', registerChild);
+provideRegister(childLeaAutoForms)
 
-function registerChild(component, regist) {
-    if (regist) {
-        childLeaAutoForms.value.push(component)
-    } else {
-        for (let i = 0; i < childLeaAutoForms.value.length; i++) {
-            if (childLeaAutoForms.value[i].uid === component.uid) {
-                childLeaAutoForms.value.splice(i, 1);
-                break;
-            }
-        }
-    }
-}
+const instance = getCurrentInstance()
 
 //inject regist
 if (!props.disableValidateChildrenForm) {
-    const registMe = inject('registLeaAutoForm')
-    if (registMe) {
-        const currentInstance = getCurrentInstance()
-        onMounted(() => {
-            if (typeof registMe === 'function') {
-                registMe(currentInstance, true)
-            }
-        })
-        onUnmounted(() => {
-            if (typeof registMe === 'function') {
-                registMe(currentInstance, false)
-            }
-        })
-    }
+    registerInstance(instance)
 }
+
+publicRegisterInstance()
 
 function resetFields() {
     refForm.value.resetFields()
