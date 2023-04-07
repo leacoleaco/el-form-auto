@@ -1,4 +1,4 @@
-import { reactive, ref, isReactive, isRef } from 'vue'
+import { isReactive, isRef, reactive, ref } from 'vue'
 
 export function isComplexDataType (type) {
   return ['object', 'array'].includes(type)
@@ -98,26 +98,34 @@ export function createDescriptorRefData (descriptor) {
  * @param descriptor
  */
 export function makeRefValueFromDescriptor (value, descriptor) {
-  if (value === undefined || value === null || !(isRef(value) || isReactive(value))) {
-    // debugger
-    if (descriptor.type === 'array') {
-      return reactive([])
-    } else if (descriptor.type === 'object') {
-      return reactive({})
-    } else {
-      let d = descriptor.defaultValue
-      if (isComplexDataType(typeof d)) {
-        if (isReactive(d) && d.value) {
-          return reactive(d.value)
-        }
-        return reactive(d)
-      } else {
-        if (isRef(d) && d.value) {
-          return ref(d.value)
-        }
-        return ref(d || null)
+  if (isRef(value)) {
+    return value
+  }
+  if (isReactive(value)) {
+    return value
+  }
+  if (value !== undefined) {
+    return ref(value)
+  }
+
+  // make value to ref or reactive obj
+  // debugger
+  if (descriptor.type === 'array') {
+    return reactive([])
+  } else if (descriptor.type === 'object') {
+    return reactive({})
+  } else {
+    let d = descriptor.defaultValue
+    if (isComplexDataType(typeof d)) {
+      if (isReactive(d) && d.value) {
+        return reactive(d.value)
       }
+      return reactive(d)
+    } else {
+      if (isRef(d) && d.value) {
+        return ref(d.value)
+      }
+      return ref(d || null)
     }
   }
-  return value
 }

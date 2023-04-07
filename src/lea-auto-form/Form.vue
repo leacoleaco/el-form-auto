@@ -233,7 +233,6 @@ function setValueKey(refValue, fieldKey, descriptor) {
             refValue[fieldKey] = ref([])
         }
     }
-
     refValue[fieldKey] = makeRefValueFromDescriptor(refValueElement, descriptor)
 }
 

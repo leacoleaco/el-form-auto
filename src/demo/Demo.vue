@@ -109,14 +109,6 @@ import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton } from 'elemen
 export default {
   name: 'Demo',
   components: { CustomComponent, NestedComponent, LeaAutoForm, ElRow, ElCol, ElTimeSelect, ElInput, ElButton },
-  data () {
-    return {
-      data: {
-        number2: 99,
-        list1: [{ text1: 'I am an array item1' }]
-      }
-    }
-  },
   methods: {
     validate () {
       let refAutoForm = this.$refs.refAutoForm
@@ -148,10 +140,11 @@ export default {
 import {ElMessage} from 'element-plus'
 import {ref, reactive} from "vue";
 
-// const data = reactive({
-//     number2: 99,
-//     list1: [{text1: 'I am an array item1'}],
-// })
+const data = ref({
+    number2: 99,
+    number3: "xxx",
+    list1: [{ text1: 'I am an array item1' }]
+})
 
 const descriptors = reactive({
     field_str: {
@@ -169,6 +162,16 @@ const descriptors = reactive({
     number1: {
         type: 'number',
         defaultValue: 2
+    },
+    number2: {
+        type: 'number',
+        label: 'SetFromData',
+        defaultValue: 6
+    },
+    number3: {
+        type: 'number',
+        label: 'SetFromWrongData',
+        defaultValue: 6
     },
     boolean1: {
         type: 'boolean',
@@ -272,8 +275,8 @@ const descriptors = reactive({
                     label: 'Nested Array Field',
                     defaultValue: [],
                     itemDescriptor: {
-                        type:'object',
-                        fields:{
+                        type: 'object',
+                        fields: {
                             number6: {
                                 type: 'number',
                                 defaultValue: 2
