@@ -289,7 +289,6 @@ function registerChild(component, regist) {
     if (regist) {
         childLeaAutoForms.value.push(component)
     } else {
-        debugger
         for (let i = 0; i < childLeaAutoForms.value.length; i++) {
             if (childLeaAutoForms.value[i].uid === component.uid) {
                 childLeaAutoForms.value.splice(i, 1);
