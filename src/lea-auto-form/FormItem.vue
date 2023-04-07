@@ -319,23 +319,6 @@ watch(
     }
 )
 
-// watch(
-//     () => props.modelValue,
-//     (v) => {
-//         if(value){
-//             value = makeRefValueFromDescriptor(v, props.descriptor)
-//         }
-//     }
-// )
-
-function clearValidate() {
-    this.$refs[props.prop].clearValidate()
-}
-
-function resetField() {
-    this.$refs[props.prop].resetField()
-}
-
 function addHashMapKey() {
     props.modelValue[hashMapKey.value] = createDescriptorRefData(
         props.descriptor.itemDescriptor
