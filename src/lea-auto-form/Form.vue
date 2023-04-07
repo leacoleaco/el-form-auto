@@ -45,6 +45,7 @@
 <script>
 import { ElForm, ElFormItem } from 'element-plus'
 import FormItem from '@/lea-auto-form/FormItem.vue'
+import { providePublicRegister, publicRegisterInstance } from '@/lea-auto-form/regist-util'
 
 export default {
   name: 'LeaAutoForm',
@@ -53,9 +54,11 @@ export default {
     ElForm,
     ElFormItem
   },
-  methods: {}
-
+  methods: {},
+  publicRegisterInstance,
+  providePublicRegister
 }
+
 </script>
 
 <script setup>
@@ -67,10 +70,6 @@ import {
     watch,
     computed,
     reactive,
-    provide,
-    inject,
-    onMounted,
-    onUnmounted,
     getCurrentInstance
 } from 'vue'
 import {provideRegister, publicRegisterInstance, registerInstance} from "@/lea-auto-form/regist-util";
@@ -306,7 +305,6 @@ defineExpose({
     resetFields,
     clearValidate
 })
-
 </script>
 
 <style lang="scss">
