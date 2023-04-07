@@ -18,6 +18,10 @@ export function provideRegister (childLeaAutoForms) {
 }
 
 export function registerInstance (instance) {
+  if (!instance) {
+    console.warn('registerInstance: instance is null, this instance auto validation may not work')
+    return
+  }
   const registMeFun = inject('registerLeaAutoForm')
   if (registMeFun) {
     onMounted(() => {
@@ -51,6 +55,10 @@ export function providePublicRegister (childLeaAutoForms) {
 }
 
 export function publicRegisterInstance (instance) {
+  if (!instance) {
+    console.warn('publicRegisterInstance: instance is null, this instance auto validation may not work')
+    return
+  }
   const registMeFun = inject('publicRegisterLeaAutoForm')
   if (registMeFun) {
     onMounted(() => {
