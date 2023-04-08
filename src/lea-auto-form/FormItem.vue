@@ -80,7 +80,8 @@
                 </form-item>
                 <div class="add-key-input-group">
                     <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
-                        <add-icon class="icon"/>{{ descriptor.addButtonText || 'add' }}
+                        <add-icon class="icon"/>
+                        {{ descriptor.addButtonText || 'add' }}
                     </el-button>
                 </div>
             </div>
@@ -157,7 +158,8 @@
                                 plain
                                 @click="addHashMapKey"
                         >
-                            <add-icon class="icon"/> {{ descriptor.addButtonText || 'add' }}
+                            <add-icon class="icon"/>
+                            {{ descriptor.addButtonText || 'add' }}
                         </el-button>
                     </div>
                 </el-form-item>
@@ -331,7 +333,7 @@ function addArrayItem() {
     const item = createDescriptorRefData(props.descriptor.itemDescriptor)
     if (props.modelValue === undefined) {
         emit('update:modelValue', [item])
-    }else{
+    } else {
         props.modelValue.push(item)
     }
 }
@@ -352,6 +354,8 @@ function deleteItem(index) {
 <style lang="scss" scoped>
 .sub-dynamic-form {
   border-radius: 5px;
+  width: 100%;
+  margin: 3px 5px 3px 0px;
   padding: 10px;
 
   .el-form-item:last-child {
