@@ -380,7 +380,7 @@ function deleteItem(index) {
 .delete-button {
   position: absolute;
   top: 0;
-  right: 5px;
+  right: 1px;
   font-size: 20px;
   color: #F56C6C;
   padding: 5px 0;
