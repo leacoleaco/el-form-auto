@@ -168,10 +168,10 @@ const isSpecialType = computed(() => {
 
 <style lang="scss" scoped>
 .dynamic-input {
-  width: calc(100% - 8px);
+  width: calc(100% - 10px);
 }
 
 .multi-select {
-  width: calc(100% - 8px);
+  width: calc(100% - 10px);
 }
 </style>

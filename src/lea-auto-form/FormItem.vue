@@ -12,7 +12,7 @@
             class="form-item"
     >
         <!-- if type is custom slot type-->
-        <div v-if="descriptor.type==='custom'">
+        <template v-if="descriptor.type==='custom'">
             <slot
                     v-if="$slots[descriptor.slotName]"
                     :name="descriptor.slotName"
@@ -33,7 +33,7 @@
                     :data="data"
                     :placeholder="descriptor.placeholder"
             />
-        </div>
+        </template>
         <!--simple type -->
         <dynamic-input
                 v-else-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
@@ -379,8 +379,8 @@ function deleteItem(index) {
 
 .delete-button {
   position: absolute;
-  top: 0;
-  right: 1px;
+  top: -8px;
+  right: -2px;
   font-size: 20px;
   color: #F56C6C;
   padding: 5px 0;
