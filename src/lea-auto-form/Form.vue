@@ -43,20 +43,20 @@
 </template>
 
 <script>
-import { ElForm, ElFormItem } from 'element-plus'
+import {ElForm, ElFormItem} from 'element-plus'
 import FormItem from '@/lea-auto-form/FormItem.vue'
-import { providePublicRegister, publicRegisterInstance } from '@/lea-auto-form/regist-util'
+import {providePublicRegister, publicRegisterInstance} from '@/lea-auto-form/regist-util'
 
 export default {
-  name: 'LeaAutoForm',
-  components: {
-    FormItem,
-    ElForm,
-    ElFormItem
-  },
-  methods: {},
-  publicRegisterInstance,
-  providePublicRegister
+    name: 'LeaAutoForm',
+    components: {
+        FormItem,
+        ElForm,
+        ElFormItem
+    },
+    methods: {},
+    publicRegisterInstance,
+    providePublicRegister
 }
 
 </script>
@@ -199,6 +199,7 @@ function initValue() {
 
 function setValueKey(refValue, fieldKey, descriptor) {
     if (descriptor === undefined || descriptor === null) {
+        console.warn(`field ${fieldKey} 's descriptor is undefined or null `)
         return
     }
 
