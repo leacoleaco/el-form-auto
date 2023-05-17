@@ -189,7 +189,7 @@ function init() {
 }
 
 function initValue() {
-    if (!isRef(value) && !isReactive(value)) {
+    if (value && !isRef(value) && !isReactive(value)) {
         throw Error(`auto form's value is not reacctive, you need use ref() or reactive()`)
     }
     for (const key in props.descriptors) {
@@ -198,6 +198,10 @@ function initValue() {
 }
 
 function setValueKey(refValue, fieldKey, descriptor) {
+    if (descriptor === undefined || descriptor === null) {
+        return
+    }
+
     if (!isRef(refValue) && !isReactive(refValue)) {
         throw Error(`${fieldKey} 's value is not reacctive, you need use ref() or reactive()`)
     }
