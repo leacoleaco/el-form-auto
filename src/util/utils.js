@@ -1,7 +1,7 @@
 import { isReactive, isRef, reactive, ref } from 'vue'
 
 export function isComplexDataType (type) {
-  return ['object', 'array'].includes(type)
+  return ['object', 'array', 'wrap'].includes(type)
 }
 
 /**
@@ -98,34 +98,26 @@ export function createDescriptorRefData (descriptor) {
  * @param descriptor
  */
 export function makeRefValueFromDescriptor (value, descriptor) {
-  if (isRef(value)) {
-    return value
-  }
-  if (isReactive(value)) {
-    return value
-  }
-  if (value !== undefined) {
-    return ref(value)
-  }
-
-  // make value to ref or reactive obj
   // debugger
   if (descriptor.type === 'array') {
-    return reactive([])
-  } else if (descriptor.type === 'object') {
-    return reactive({})
-  } else {
-    let d = descriptor.defaultValue
-    if (isComplexDataType(typeof d)) {
-      if (isReactive(d) && d.value) {
-        return reactive(d.value)
-      }
-      return reactive(d)
-    } else {
-      if (isRef(d) && d.value) {
-        return ref(d.value)
-      }
-      return ref(d || null)
+    const res = value || []
+    for (let i = 0; i < res.length; i++) {
+      res[i] = makeRefValueFromDescriptor(res[i], descriptor.itemDescriptor)
     }
+    return res
+  } else if (descriptor.type === 'object') {
+    const res = value || {}
+    for (const key in descriptor.fields) {
+      res[key] = makeRefValueFromDescriptor(res[key], descriptor.fields[key])
+    }
+    return res
+  } else if (descriptor.type === 'wrap') {
+    const res = value || {}
+    for (const key in descriptor.fields) {
+      res[key] = makeRefValueFromDescriptor(res[key], descriptor.fields[key])
+    }
+    return res
+  } else {
+    return value || descriptor.defaultValue
   }
 }

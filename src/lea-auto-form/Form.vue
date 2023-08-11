@@ -1,45 +1,45 @@
 <template>
-    <div class="form" :style="style">
-        <el-form
-                v-if="value"
-                ref="refForm"
-                style="background: none"
-                :model="value"
-                :disabled="disabled"
-                :size="size"
-                :label-position="labelPosition"
+  <div class="form" :style="style">
+    <el-form
+        v-if="value"
+        ref="refForm"
+        style="background: none"
+        :model="value"
+        :disabled="disabled"
+        :size="size"
+        :label-position="labelPosition"
+    >
+      <form-item
+          ref="refFormItems"
+          v-for="(descriptor, key) in descriptors"
+          :key="key"
+          :model-value="value[key]"
+          @update:modelValue="updateValue(key, $event)"
+          :data="value"
+          :lang="lang"
+          :label="descriptor.label || key"
+          :prop="key"
+          :label-width="labelWidth"
+          :descriptor="descriptor"
+          :size="size"
+          :background-color="backgroundColor"
+          :bg-color-offset="bgColorOffset"
+          :show-outer-error="showOuterError"
+          @fieldInput="e=>$emit('fieldInput',e)"
+      >
+        <!--pass the parent's slots to child component-->
+        <template
+            v-for="(_, name) in $slots" v-slot:[name]="data"
         >
-            <form-item
-                    ref="refFormItems"
-                    v-for="(descriptor, key) in descriptors.filter(it=>!!it)"
-                    :key="key"
-                    :model-value="value[key]"
-                    @update:modelValue="updateValue(key, $event)"
-                    :data="value"
-                    :lang="lang"
-                    :label="descriptor.label || key"
-                    :prop="key"
-                    :label-width="labelWidth"
-                    :descriptor="descriptor"
-                    :size="size"
-                    :background-color="backgroundColor"
-                    :bg-color-offset="bgColorOffset"
-                    :show-outer-error="showOuterError"
-                    @fieldInput="e=>$emit('fieldInput',e)"
-            >
-                <!--pass the parent's slots to child component-->
-                <template
-                        v-for="(_, name) in $slots" v-slot:[name]="data"
-                >
-                    <slot :name="name" v-bind="data"/>
-                </template>
-            </form-item>
+          <slot :name="name" v-bind="data"/>
+        </template>
+      </form-item>
 
-            <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
-                <slot name="operations"/>
-            </el-form-item>
-        </el-form>
-    </div>
+      <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
+        <slot name="operations"/>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script>
@@ -64,86 +64,86 @@ export default {
 <script setup>
 import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '@/util/utils'
 import {
-    ref,
-    isRef,
-    isReactive,
-    watch,
-    computed,
-    reactive,
-    getCurrentInstance
+  ref,
+  isRef,
+  isReactive,
+  watch,
+  computed,
+  reactive,
+  getCurrentInstance
 } from 'vue'
 import {provideRegister, publicRegisterInstance, registerInstance} from "@/lea-auto-form/regist-util";
 
 const props = defineProps({
-    modelValue: {
-        type: Object,
-        required: true
-    },
-    lang: {
-        type: String,
-        default: 'zh_CN'
-    },
-    disabled: {
-        type: Boolean,
-        default: false
-    },
-    /**
-     * descriptor of data
-     */
-    descriptors: {
-        type: Object,
-        required: true
-    },
-    /**
-     * size of the input component
-     */
-    size: {
-        type: String,
-        default: 'small'
-    },
-    /**
-     * show label position
-     * [top, left ,right]
-     */
-    labelPosition: {
-        type: String,
-        default: 'right'
-    },
-    /**
-     * background-color of form
-     */
-    backgroundColor: {
-        type: String,
-        default: '#FFFFFF'
-    },
-    /**
-     * font-size of form
-     */
-    fontSize: {
-        type: Number,
-        default: 13
-    },
-    /**
-     * whether show parent component's error, default true
-     */
-    showOuterError: {
-        type: Boolean,
-        default: true
-    },
-    /**
-     * darken sub-form's background-color with offset while get positive integer
-     */
-    bgColorOffset: {
-        type: Number,
-        default: 8
-    },
-    /**
-     * disable auto validate children form if true
-     */
-    disableValidateChildrenForm: {
-        type: Boolean,
-        default: false
-    }
+  modelValue: {
+    type: Object,
+    required: true
+  },
+  lang: {
+    type: String,
+    default: 'zh_CN'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * descriptor of data
+   */
+  descriptors: {
+    type: Object,
+    required: true
+  },
+  /**
+   * size of the input component
+   */
+  size: {
+    type: String,
+    default: 'small'
+  },
+  /**
+   * show label position
+   * [top, left ,right]
+   */
+  labelPosition: {
+    type: String,
+    default: 'right'
+  },
+  /**
+   * background-color of form
+   */
+  backgroundColor: {
+    type: String,
+    default: '#FFFFFF'
+  },
+  /**
+   * font-size of form
+   */
+  fontSize: {
+    type: Number,
+    default: 13
+  },
+  /**
+   * whether show parent component's error, default true
+   */
+  showOuterError: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * darken sub-form's background-color with offset while get positive integer
+   */
+  bgColorOffset: {
+    type: Number,
+    default: 8
+  },
+  /**
+   * disable auto validate children form if true
+   */
+  disableValidateChildrenForm: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const doValidate = ref(false)
@@ -154,94 +154,62 @@ const refFormItems = ref([])
 watch(
     () => props.descriptors,
     () => {
-        init()
+      init()
     }
 )
 
 const value = props.modelValue
 
 function updateValue(prop, v) {
-    value[prop] = v
+  value[prop] = v
 }
 
 const rules = computed(() => {
-    const r = {}
-    for (const prop in props.descriptors) {
-        if (!prop) {
-            continue
-        }
-        const rules = props.descriptors[prop].rules
-        if (rules) {
-            r[prop] = rules
-        }
+  const r = {}
+  for (const prop in props.descriptors) {
+    if (!prop) {
+      continue
     }
-    return r
+    const rules = props.descriptors[prop].rules
+    if (rules) {
+      r[prop] = rules
+    }
+  }
+  return r
 })
 
 const labelWidth = computed(() => getLabelWidth(props.descriptors, props.fontSize))
 
 const style = computed(() => {
-    return {
-        fontSize: `${props.fontSize}px`,
-        backgroundColor: props.backgroundColor
-    }
+  return {
+    fontSize: `${props.fontSize}px`,
+    backgroundColor: props.backgroundColor
+  }
 })
 
 function init() {
-    initValue()
+  initValue()
 }
 
 function initValue() {
-    if (value && !isRef(value) && !isReactive(value)) {
-        throw Error(`auto form's value is not reacctive, you need use ref() or reactive()`)
-    }
-    for (const key in props.descriptors) {
-        setValueKey(value, key, props.descriptors[key])
-    }
+  if (value && !isRef(value) && !isReactive(value)) {
+    throw Error(`auto form's value is not reacctive, you need use ref() or reactive()`)
+  }
+  if (!isRef(value) && !isReactive(value)) {
+    throw Error(`value is not reacctive, you need use ref() or reactive()`)
+  }
+  for (const key in props.descriptors) {
+    setValueKey(value, key, props.descriptors[key])
+  }
 }
 
 function setValueKey(refValue, fieldKey, descriptor) {
-    if (descriptor === undefined || descriptor === null) {
-        console.warn(`field ${fieldKey} 's descriptor is undefined or null `)
-        return
-    }
+  if (descriptor === undefined || descriptor === null) {
+    console.warn(`field ${fieldKey} 's descriptor is undefined or null `)
+    return
+  }
 
-    if (!isRef(refValue) && !isReactive(refValue)) {
-        throw Error(`${fieldKey} 's value is not reacctive, you need use ref() or reactive()`)
-    }
-    const refValueElement = refValue[fieldKey]
-    if (isComplexDataType(descriptor.type)) {
-        if (descriptor.type === 'object') {
-            // object
-            if (descriptor.fields) {
-                // normal object
-                if (refValueElement === undefined) {
-                    refValue[fieldKey] = reactive({})
-                }
-                for (const subFieldKey in descriptor.fields) {
-                    setValueKey(refValueElement, subFieldKey, descriptor.fields[subFieldKey])
-                }
-                return
-            } else {
-                // hashmap
-                if (refValueElement === undefined) {
-                    refValue[fieldKey] = reactive({})
-                    return
-                }
-            }
-        } else {
-            // array
-            if (refValueElement === undefined) {
-                refValue[fieldKey] = reactive([])
-                return
-            }
-        }
-    } else if (descriptor.type === 'array') {
-        if (refValueElement === undefined) {
-            refValue[fieldKey] = ref([])
-        }
-    }
-    refValue[fieldKey] = makeRefValueFromDescriptor(refValueElement, descriptor)
+  refValue[fieldKey] = makeRefValueFromDescriptor(refValue[fieldKey], descriptor)
 }
 
 init()
@@ -251,16 +219,16 @@ init()
  * @returns {Promise<boolean>}
  */
 function validate() {
-    const promises = []
-    promises.push(validateCurrentForm())
-    childLeaAutoForms.value.forEach(f => {
-        if (f && f.exposed && f.exposed.validateCurrentForm) {
-            promises.push(f.exposed.validateCurrentForm())
-        }
-    })
-    return Promise.all(promises).then(r => {
-        return r.indexOf(false) === -1
-    })
+  const promises = []
+  promises.push(validateCurrentForm())
+  childLeaAutoForms.value.forEach(f => {
+    if (f && f.exposed && f.exposed.validateCurrentForm) {
+      promises.push(f.exposed.validateCurrentForm())
+    }
+  })
+  return Promise.all(promises).then(r => {
+    return r.indexOf(false) === -1
+  })
 }
 
 /**
@@ -268,16 +236,16 @@ function validate() {
  * @returns {Promise<boolean>}
  */
 function validateCurrentForm() {
-    // validate main form
-    return new Promise((resolve, reject) => {
-        if (refForm.value) {
-            refForm.value.validate(valid => {
-                resolve(valid)
-            })
-        } else {
-            resolve(true)
-        }
-    })
+  // validate main form
+  return new Promise((resolve, reject) => {
+    if (refForm.value) {
+      refForm.value.validate(valid => {
+        resolve(valid)
+      })
+    } else {
+      resolve(true)
+    }
+  })
 }
 
 /**
@@ -293,24 +261,24 @@ const instance = getCurrentInstance()
 
 //inject regist
 if (!props.disableValidateChildrenForm) {
-    registerInstance(instance)
+  registerInstance(instance)
 }
 
 publicRegisterInstance(instance)
 
 function resetFields() {
-    refForm.value.resetFields()
+  refForm.value.resetFields()
 }
 
 function clearValidate() {
-    refForm.value.clearValidate()
+  refForm.value.clearValidate()
 }
 
 defineExpose({
-    validate,
-    validateCurrentForm,
-    resetFields,
-    clearValidate
+  validate,
+  validateCurrentForm,
+  resetFields,
+  clearValidate
 })
 </script>
 
