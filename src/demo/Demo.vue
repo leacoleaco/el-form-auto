@@ -169,7 +169,10 @@ const descriptors = reactive({
   number2: {
     type: 'number',
     label: 'SetFromData',
-    defaultValue: 6
+    defaultValue: 6,
+    tooltip: {
+      content: "This is tooltip"
+    },
   },
   number3: {
     type: 'number',
@@ -246,7 +249,10 @@ const descriptors = reactive({
           },
           rules: [
             {required: true, message: 'you need to input text'}
-          ]
+          ],
+          tooltip:{
+            content: 'This is tooltip'
+          }
         },
         boolean2: {
           type: 'boolean',
