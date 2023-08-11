@@ -11,7 +11,7 @@
         >
             <form-item
                     ref="refFormItems"
-                    v-for="(descriptor, key) in descriptors"
+                    v-for="(descriptor, key) in descriptors.filter(it=>!!it)"
                     :key="key"
                     :model-value="value[key]"
                     @update:modelValue="updateValue(key, $event)"
@@ -167,6 +167,9 @@ function updateValue(prop, v) {
 const rules = computed(() => {
     const r = {}
     for (const prop in props.descriptors) {
+        if (!prop) {
+            continue
+        }
         const rules = props.descriptors[prop].rules
         if (rules) {
             r[prop] = rules
