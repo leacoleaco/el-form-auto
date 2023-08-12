@@ -89,12 +89,18 @@
     </template>
     <!-- if type is wrap -->
     <template v-else-if="descriptor.type === 'wrap'">
-      <div class="sub-dynamic-form" :style="{backgroundColor: subFormBackgroundColor}">
+      <div class="sub-dynamic-form el-form"
+           :class="{
+            'el-form--label-top':descriptor.labelPosition==='top',
+            'el-form--label-right':descriptor.labelPosition==='right',
+           }"
+           :style="{backgroundColor: subFormBackgroundColor}">
         <form-item
             v-for="(subDesc, key) in descriptor['fields']"
             :key="key"
             v-model="props.modelValue[key]"
             :data="props.modelValue"
+            :label="subDesc.label || key"
             :prop="key"
             :descriptor="subDesc"
             :background-color="subFormBackgroundColor"
@@ -192,11 +198,17 @@
     <el-button v-if="deletable" class="delete-button" link @click="emitDelete">
       <close-icon class="icon"/>
     </el-button>
+    <el-alert
+        v-if="descriptor.alert"
+        v-bind="descriptor.alert"
+        style="margin: 3px 8px 0 0;padding:5px">
+      <div v-html="descriptor.alert?.message" />
+    </el-alert>
   </el-form-item>
 </template>
 
 <script>
-import { ElButton, ElInput, ElFormItem } from 'element-plus'
+import { ElButton, ElInput, ElFormItem, ElAlert } from 'element-plus'
 
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
@@ -206,7 +218,8 @@ export default {
     DynamicInput,
     ElButton,
     ElFormItem,
-    ElInput
+    ElInput,
+    ElAlert
   }
 }
 </script>
@@ -310,7 +323,7 @@ const props = defineProps({
   },
   labelWidth: {
     type: String,
-    default: '30px'
+    default: ''
   },
   /**
    * wether open validate
@@ -387,7 +400,7 @@ function deleteItem(index) {
   }
 }
 
-.el-form-item .el-form-item{
+.el-form-item .el-form-item {
   margin-bottom: 8px;
 }
 

@@ -177,7 +177,13 @@ const descriptors = reactive({
   number3: {
     type: 'number',
     label: 'SetFromWrongData',
-    defaultValue: 6
+    defaultValue: 6,
+    alert: {
+      showIcon: true,
+      closable: true,
+      type: 'info',
+      message: 'This is an alert box'
+    }
   },
   boolean1: {
     type: 'boolean',
@@ -250,7 +256,7 @@ const descriptors = reactive({
           rules: [
             {required: true, message: 'you need to input text'}
           ],
-          tooltip:{
+          tooltip: {
             content: 'This is tooltip'
           }
         },
@@ -313,6 +319,31 @@ const descriptors = reactive({
           name: 'el-input', props: {type: 'textarea'}
         }
       }
+    }
+  },
+  wrap2: {
+    type: 'wrap',
+    label: 'Wrap2 Field',
+    labelPosition: 'top',
+    fields: {
+      text1: {
+        type: 'text',
+        label: 'Text Field',
+        min: 1,
+        defaultValue: '',
+        component: {
+          name: 'el-input', props: {type: 'textarea'}
+        },
+        rules: [{required: true, message: 'it is required!'}]
+      },
+      number2: {
+        type: 'number',
+        label: 'Long Long Label Name',
+        defaultValue: 6,
+        tooltip: {
+          content: "This is tooltip"
+        },
+      },
     }
   },
   obj1: {
