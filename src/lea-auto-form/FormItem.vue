@@ -39,6 +39,7 @@
         v-else-if="!isComplexDataType(descriptor.type) || Boolean(descriptor.component)"
         :model-value="props.modelValue"
         @update:modelValue="updateValue"
+        :enum-source="enumSource"
         :size="size"
         :field="prop"
         :descriptor="descriptor"
@@ -52,6 +53,7 @@
         <dynamic-input
             :model-value="props.modelValue"
             @update:modelValue="updateValue"
+            :enum-source="enumSource"
             :size="size"
             :descriptor="descriptor.itemDescriptor"
         />
@@ -62,6 +64,7 @@
             :key="key"
             v-model="props.modelValue[key]"
             :data="data"
+            :enum-source="enumSource"
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
             :descriptor="descriptor.itemDescriptor"
@@ -100,6 +103,7 @@
             :key="key"
             v-model="props.modelValue[key]"
             :data="props.modelValue"
+            :enum-source="enumSource"
             :label="subDesc.label || key"
             :prop="key"
             :descriptor="subDesc"
@@ -129,6 +133,7 @@
             :key="key"
             v-model="props.modelValue[key]"
             :data="data"
+            :enum-source="enumSource"
             :label="_descriptor.label || key"
             :prop="prop ? prop + '.' + key : key"
             :descriptor="_descriptor"
@@ -158,6 +163,7 @@
             :key="key"
             v-model="props.modelValue[key]"
             :data="data"
+            :enum-source="enumSource"
             :label="key"
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
@@ -276,11 +282,18 @@ const props = defineProps({
     required: true
   },
   /**
-   * the form's binding data
+   * the form's global binding data
    */
   data: {
     type: Object,
     required: true
+  },
+  /**
+   * the form's global enumSource
+   */
+  enumSource: {
+    type: Object,
+    default: {}
   },
   /**
    * size of the input component

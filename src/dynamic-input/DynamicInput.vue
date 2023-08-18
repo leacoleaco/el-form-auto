@@ -27,7 +27,7 @@
         v-on="on"
     >
       <el-option
-          v-for="option in props.descriptor.options"
+          v-for="option in props.descriptor.enumSourceKey?props.enumSource[props.descriptor.enumSourceKey]:props.descriptor.options"
           :key="(typeof option ==='object')?option.label:option"
           :value="(typeof option ==='object')?option.value:option"
           :label="(typeof option ==='object')?option.label:option"
@@ -107,7 +107,11 @@ const props = defineProps({
   descriptor: {
     type: Object,
     required: true
-  }
+  },
+  enumSource: {
+    type: Object,
+    default: {}
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])

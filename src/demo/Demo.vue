@@ -34,6 +34,7 @@
               ref="refAutoForm"
               :descriptors="descriptors"
               v-model="data"
+              :enum-source="enumSource"
           >
 
             <!--use custom component -->
@@ -149,6 +150,10 @@ const data = ref({
   }
 })
 
+const enumSource = ref({
+  "testKey": ['Sun', 'Moon', 'Star']
+})
+
 const descriptors = reactive({
   field_str: {
     type: 'string',
@@ -213,6 +218,12 @@ const descriptors = reactive({
       {label: 'Apple', value: 2}
     ],
     placeholder: 'Please choose some fruits'
+  },
+  enumFromSource: {
+    type: 'enum',
+    label: 'TestEnumFromSource',
+    enumSourceKey: 'testKey',
+    placeholder: 'Please choose'
   },
   date1: {
     type: 'date'

@@ -16,6 +16,7 @@
           :model-value="value[key]"
           @update:modelValue="updateValue(key, $event)"
           :data="value"
+          :enum-source="enumSource"
           :lang="lang"
           :label="descriptor.label || key"
           :prop="key"
@@ -93,6 +94,15 @@ const props = defineProps({
   descriptors: {
     type: Object,
     required: true
+  },
+  /**
+   * if you don't want to use enum options in the descriptors,
+   * you can provide global enum options here,
+   * then set the 'enumSourceKey' in descriptor
+   */
+  enumSource: {
+    type: Object,
+    default: {}
   },
   /**
    * size of the input component
