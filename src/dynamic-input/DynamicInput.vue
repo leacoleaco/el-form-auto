@@ -11,8 +11,8 @@
         :size="size"
         v-on="on"
     >
-      <dynamic-component v-for="(component, index) in children"
-                         :key="index" :component="component"/>
+      <dynamic-component v-for="component in children"
+                         :key="component" :component="component"/>
     </component>
     <!-- enum type use el-select -->
     <el-select

@@ -5,7 +5,7 @@
             v-bind="component.props"
             v-on="component.events"
     >
-        <dynamic-component v-for="(item, index) in children" :key="index" :component="item"/>
+        <dynamic-component v-for="item in children" :key="item" :component="item"/>
     </component>
     <span v-else>{{ component }}</span>
 </template>
