@@ -1,7 +1,7 @@
 <template>
+  <!--  :ref="prop"-->
   <el-form-item
       v-show="!descriptor.hidden"
-      :ref="prop"
       :label="labelWidth === '0px' ? '' : (label || prop)"
       :label-width="labelWidth"
       :prop="prop"
@@ -105,7 +105,7 @@
             :data="props.modelValue"
             :enum-source="enumSource"
             :label="subDesc.label || key"
-            :prop="key"
+            :prop="`${prop}.${key}`"
             :descriptor="subDesc"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
@@ -208,7 +208,7 @@
         v-if="descriptor.alert"
         v-bind="descriptor.alert"
         style="margin: 3px 8px 0 0;padding:5px">
-      <div v-html="descriptor.alert?.message" />
+      <div v-html="descriptor.alert?.message"/>
     </el-alert>
   </el-form-item>
 </template>
@@ -253,6 +253,7 @@ const props = defineProps({
   },
   /**
    * the data's field
+   * if field is wrap, use "a.b" to let framework detect prop
    */
   prop: {
     type: String,

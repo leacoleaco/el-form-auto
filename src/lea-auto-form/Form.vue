@@ -174,20 +174,6 @@ function updateValue(prop, v) {
   value[prop] = v
 }
 
-const rules = computed(() => {
-  const r = {}
-  for (const prop in props.descriptors) {
-    if (!prop) {
-      continue
-    }
-    const rules = props.descriptors[prop].rules
-    if (rules) {
-      r[prop] = rules
-    }
-  }
-  return r
-})
-
 const labelWidth = computed(() => getLabelWidth(props.descriptors, props.fontSize))
 
 const style = computed(() => {
