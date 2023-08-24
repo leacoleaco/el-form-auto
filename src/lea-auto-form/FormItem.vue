@@ -22,6 +22,7 @@
           :updateModelValue="updateValue"
           :data="data"
           :placeholder="descriptor.placeholder"
+          :descriptor="descriptor"
       />
       <slot
           v-else
@@ -32,6 +33,7 @@
           :updateModelValue="updateValue"
           :data="data"
           :placeholder="descriptor.placeholder"
+          :descriptor="descriptor"
       />
     </template>
     <!--simple type -->
