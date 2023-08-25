@@ -9,36 +9,43 @@
         :size="size"
         :label-position="labelPosition"
     >
-      <form-item
-          ref="refFormItems"
-          v-for="(descriptor, key) in descriptors"
-          :key="key"
-          :model-value="value[key]"
-          @update:modelValue="updateValue(key, $event)"
-          :data="value"
-          :enum-source="enumSource"
-          :lang="lang"
-          :label="descriptor.label || key"
-          :prop="key"
-          :label-width="labelWidth"
-          :descriptor="descriptor"
-          :size="size"
-          :background-color="backgroundColor"
-          :bg-color-offset="bgColorOffset"
-          :show-outer-error="showOuterError"
-          @fieldInput="e=>$emit('fieldInput',e)"
-      >
-        <!--pass the parent's slots to child component-->
-        <template
-            v-for="(_, name) in $slots" v-slot:[name]="data"
-        >
-          <slot :name="name" v-bind="data"/>
-        </template>
-      </form-item>
+      <component :is="defaultParentComponent" v-bind="defaultParentComponentProps">
+        <component
+            :is="defaultItemComponent||descriptors.layout"
+            v-bind="defaultItemComponentProps||descriptors.layoutProps"
+            v-for="(descriptor, key) in descriptors"
+            :key="key">
+          <form-item
+              ref="refFormItems"
+              :model-value="value[key]"
+              @update:modelValue="updateValue(key, $event)"
+              :data="value"
+              :enum-source="enumSource"
+              :lang="lang"
+              :label="descriptor.label || key"
+              :prop="key"
+              :label-width="labelWidth"
+              :descriptor="descriptor"
+              :size="size"
+              :background-color="backgroundColor"
+              :bg-color-offset="bgColorOffset"
+              :show-outer-error="showOuterError"
+              @fieldInput="e=>$emit('fieldInput',e)"
+          >
+            <!--pass the parent's slots to child component-->
+            <template
+                v-for="(_, name) in $slots" v-slot:[name]="data"
+            >
+              <slot :name="name" v-bind="data"/>
+            </template>
+          </form-item>
 
-      <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
-        <slot name="operations"/>
-      </el-form-item>
+          <el-form-item v-if="$slots.operations" class="operations" :label-width="labelWidth">
+            <slot name="operations"/>
+          </el-form-item>
+
+        </component>
+      </component>
     </el-form>
   </div>
 </template>
@@ -153,6 +160,22 @@ const props = defineProps({
   disableValidateChildrenForm: {
     type: Boolean,
     default: false
+  },
+  defaultParentComponent: {
+    type: [String, Object],
+    default: 'div'
+  },
+  defaultParentComponentProps: {
+    type: Object,
+    default: {}
+  },
+  defaultItemComponent: {
+    type: [String, Object],
+    default: 'div'
+  },
+  defaultItemComponentProps: {
+    type: Object,
+    default: {}
   }
 })
 

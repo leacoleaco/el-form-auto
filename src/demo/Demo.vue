@@ -29,12 +29,17 @@
       </el-col>
       <el-col :span="15">
         <div>the form will auto generate by the descriptor we input:</div>
+        <el-switch v-model="switchLayout" active-text="Another Layout" inactive-text="Default Layout"></el-switch>
         <div style="padding: 20px;background: #efefef">
           <lea-auto-form
               ref="refAutoForm"
               :descriptors="descriptors"
               v-model="data"
               :enum-source="enumSource"
+              :default-parent-component="parentComponent"
+              :default-parent-component-props="parentLayoutProps"
+              :default-item-component="defaultItemComponent"
+              :default-item-component-props="defaultItemComponentProps"
           >
 
             <!--use custom component -->
@@ -139,7 +144,8 @@ export default {
 <script setup>
 
 import {ElMessage} from 'element-plus'
-import {ref, reactive} from "vue";
+import {ref, reactive, watch} from "vue";
+import {ElSwitch, ElRow, ElCol, ElTable, ElTableColumn} from "element-plus";
 
 const data = ref({
   number2: 99,
@@ -397,6 +403,33 @@ function updateFormByMyInputDescriptorConfig() {
     })
   }
 }
+
+// layout control
+const parentComponent = ref('div')
+const parentLayoutProps = ref({})
+const defaultItemComponent = ref('div')
+const defaultItemComponentProps = ref({})
+
+const switchLayout = ref(false)
+watch(switchLayout, (newVal) => {
+  if (newVal) {
+    parentComponent.value = ElRow
+    defaultItemComponent.value = ElCol
+    parentLayoutProps.value = {
+      col: 2
+    }
+    defaultItemComponentProps.value = {
+      span: 12
+    }
+  } else {
+    parentComponent.value = 'div'
+    defaultItemComponent.value = 'div'
+    parentLayoutProps.value = {}
+    defaultItemComponentProps.value = {}
+  }
+})
+
+// layout control end
 
 </script>
 

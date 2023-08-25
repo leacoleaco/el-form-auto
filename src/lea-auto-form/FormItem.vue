@@ -48,8 +48,9 @@
     />
     <!-- if type is array -->
     <template v-else-if="descriptor.type === 'array'">
-      <div
+      <component
           v-if="descriptor.itemDescriptor && descriptor.itemDescriptor.type === 'enum' && descriptor.itemDescriptor.multiple"
+          :is="descriptor.component || 'div'"
           class="multi-select"
       >
         <dynamic-input
@@ -59,8 +60,10 @@
             :size="size"
             :descriptor="descriptor.itemDescriptor"
         />
-      </div>
-      <div v-else class="sub-dynamic-form array" :style="{backgroundColor: subFormBackgroundColor}">
+      </component>
+      <component v-else class="sub-dynamic-form array"
+           :is="descriptor.component || 'div'"
+           :style="{backgroundColor: subFormBackgroundColor}">
         <form-item
             v-for="(temp, key) in props.modelValue"
             :key="key"
@@ -84,13 +87,15 @@
             <slot :name="name" v-bind="data"/>
           </template>
         </form-item>
-        <div class="add-key-input-group">
-          <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
-            <add-icon class="icon"/>
-            {{ descriptor.addButtonText || 'add' }}
-          </el-button>
-        </div>
-      </div>
+      </component>
+      <component
+          :is="descriptor.addButtonComponent || 'div'"
+          class="add-key-input-group">
+        <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
+          <add-icon class="icon"/>
+          {{ descriptor.addButtonText || 'add' }}
+        </el-button>
+      </component>
     </template>
     <!-- if type is wrap -->
     <template v-else-if="descriptor.type === 'wrap'">
