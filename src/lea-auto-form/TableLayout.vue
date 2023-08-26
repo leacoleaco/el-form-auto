@@ -123,53 +123,49 @@ function deleteItem(row) {
 </script>
 
 <template>
-  <div>
-    <div> {{ props.prop }}</div>
-    <div> {{ props.modelValue }}</div>
-    <el-table :data="props.modelValue" :size="props.size"
-              border
+  <el-table :data="props.modelValue" :size="props.size"
+            border
+  >
+    <el-table-column
+        v-for="(_descriptor,key) in descriptor.fields"
+        :key="key"
+        :label="_descriptor.label || key"
     >
-      <el-table-column
-          v-for="(_descriptor,key) in descriptor.fields"
-          :key="key"
-          :label="_descriptor.label || key"
-      >
-        <template #default="{row}">
-          <form-item
-              v-model="row[key]"
-              :data="data"
-              :enum-source="enumSource"
-              :prop="props.prop ? props.prop + '.' + key : key"
-              :descriptor="_descriptor"
-              label-width="0px"
-              :background-color="props.backgroundColor"
-              :show-outer-error="showOuterError"
-              @fieldInput="e=>$emit('fieldInput',e)"
+      <template #default="{row,column,$index}">
+        <form-item
+            v-model="row[key]"
+            :data="data"
+            :enum-source="enumSource"
+            :prop="props.prop ? props.prop + '.' + $index+'.'+key : $index+'.'+key"
+            :descriptor="_descriptor"
+            label-width="0px"
+            :background-color="props.backgroundColor"
+            :show-outer-error="showOuterError"
+            @fieldInput="e=>$emit('fieldInput',e)"
+        >
+          <!-- @delete="deleteItem(key)"-->
+          <!--pass the parent's slots to child component-->
+          <template
+              v-for="(_ , name) in $slots"
+              v-slot:[name]="data"
           >
-            <!-- @delete="deleteItem(key)"-->
-            <!--pass the parent's slots to child component-->
-            <template
-                v-for="(_ , name) in $slots"
-                v-slot:[name]="data"
-            >
-              <slot :name="name" v-bind="data"/>
-            </template>
-          </form-item>
-        </template>
-      </el-table-column>
-      <el-table-column width="60">
-        <template #default="{row}">
-          <el-button
-              type="danger"
-              class="delete-button" link
-              @click="deleteItem(row)"
-          >
-            <close-icon class="icon"/>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+            <slot :name="name" v-bind="data"/>
+          </template>
+        </form-item>
+      </template>
+    </el-table-column>
+    <el-table-column width="60">
+      <template #default="{row}">
+        <el-button
+            type="danger"
+            class="delete-button" link
+            @click="deleteItem(row)"
+        >
+          <close-icon class="icon"/>
+        </el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <style scoped lang="scss">
