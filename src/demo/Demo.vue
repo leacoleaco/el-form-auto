@@ -147,6 +147,7 @@ import {ElMessage} from 'element-plus'
 import {ref, reactive, watch} from "vue";
 import {ElSwitch, ElRow, ElCol, ElTable, ElTableColumn} from "element-plus";
 import LeaAutoFormTableLayout from '@/lea-auto-form/TableLayout.vue'
+import cascaderOptions from './data/CascaderOptions.js'
 
 const data = ref({
   number2: 99,
@@ -201,7 +202,7 @@ const descriptors = reactive({
   slider1: {
     type: 'slider',
     // use props to override default behavior
-    props:{
+    props: {
       min: 1,
       max: 360,
       step: 2,
@@ -242,6 +243,11 @@ const descriptors = reactive({
     label: 'TestEnumFromSource',
     enumSourceKey: 'testKey',
     placeholder: 'Please choose'
+  },
+  cascader1: {
+    type: 'enum',
+    enumComponent: 'cascader',
+    options: cascaderOptions,
   },
   date1: {
     type: 'date'

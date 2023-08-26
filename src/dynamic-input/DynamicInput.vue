@@ -16,7 +16,7 @@
     </component>
     <!-- enum type use el-select -->
     <el-select
-        v-else-if="descriptor.type === 'enum'"
+        v-else-if="descriptor.type === 'enum'&&(!descriptor.enumComponent||descriptor.enumComponent==='select')"
         :model-value="props.modelValue"
         @update:modelValue="updateValue"
         class="dynamic-input"
@@ -34,6 +34,17 @@
           :disabled="(typeof option==='object')?option.disabled:false"
       />
     </el-select>
+    <!-- enum type use el-cascader -->
+    <el-cascader
+        v-else-if="descriptor.type === 'enum'&&descriptor.enumComponent==='cascader'"
+        :model-value="props.modelValue"
+        @update:modelValue="updateValue"
+        class="dynamic-input"
+        :options="props.descriptor.enumSourceKey?props.enumSource[props.descriptor.enumSourceKey]:props.descriptor.options"
+        v-bind="bind"
+        :size="size"
+        v-on="on"
+    />
     <!-- date type use el-date-picker -->
     <el-date-picker
         v-else-if="descriptor.type === 'date'"
@@ -57,7 +68,18 @@
 
 <script>
 import DynamicComponent from '../dynamic-component/DynamicComponent.vue'
-import { ElButton, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElSwitch, ElSlider, ElTooltip } from 'element-plus'
+import {
+  ElButton,
+  ElInput,
+  ElInputNumber,
+  ElSelect,
+  ElOption,
+  ElDatePicker,
+  ElSwitch,
+  ElSlider,
+  ElCascader,
+  ElTooltip
+} from 'element-plus'
 import QuestionIcon from '../components/QuestionIcon.vue'
 
 export default {
@@ -72,6 +94,7 @@ export default {
     ElDatePicker,
     ElSwitch,
     ElSlider,
+    ElCascader,
     ElTooltip,
     QuestionIcon
   }
