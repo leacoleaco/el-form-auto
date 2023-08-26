@@ -350,11 +350,21 @@ const descriptors = reactive({
         },
         boolean2: {
           type: 'boolean',
+          columnProps: {
+            //property config you can  see:
+            //https://element-plus.org/en-US/component/table.html#table-column-attributes
+            width: '100px'
+          },
           defaultValue: true
         },
         number1: {
           type: 'number',
           label: 'Number Field',
+          columnProps: {
+            //property config you can  see:
+            //https://element-plus.org/en-US/component/table.html#table-column-attributes
+            width: '130px'
+          },
           defaultValue: 999,
           rules: [
             {required: true},

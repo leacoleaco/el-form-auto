@@ -129,6 +129,7 @@ function deleteItem(row) {
     <el-table-column
         v-for="(_descriptor,key) in descriptor.fields"
         :key="key"
+        v-bind="_descriptor.columnProps"
         :label="_descriptor.label || key"
     >
       <template #default="{row,column,$index}">
