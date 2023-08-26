@@ -57,7 +57,7 @@
 
 <script>
 import DynamicComponent from '../dynamic-component/DynamicComponent.vue'
-import { ElButton, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElSwitch, ElTooltip } from 'element-plus'
+import { ElButton, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElSwitch, ElSlider, ElTooltip } from 'element-plus'
 import QuestionIcon from '../components/QuestionIcon.vue'
 
 export default {
@@ -71,6 +71,7 @@ export default {
     ElOption,
     ElDatePicker,
     ElSwitch,
+    ElSlider,
     ElTooltip,
     QuestionIcon
   }
@@ -89,6 +90,7 @@ const TYPE_COMPONENT_MAP = {
   integer: 'el-input-number',
   float: 'el-input-number',
   enum: 'el-select',
+  slider: 'el-slider',
   url: 'el-input'
 }
 

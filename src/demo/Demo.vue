@@ -198,6 +198,16 @@ const descriptors = reactive({
       message: 'This is an alert box'
     }
   },
+  slider1: {
+    type: 'slider',
+    // use props to override default behavior
+    props:{
+      min: 1,
+      max: 360,
+      step: 2,
+    },
+    defaultValue: 2
+  },
   boolean1: {
     type: 'boolean',
     defaultValue: true
