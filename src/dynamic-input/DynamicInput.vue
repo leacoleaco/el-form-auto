@@ -118,6 +118,7 @@ import {
   ElRadioGroup,
   ElRadio,
   ElCascader,
+  ElColorPicker,
   ElTooltip
 } from 'element-plus'
 import QuestionIcon from '../components/QuestionIcon.vue'
@@ -139,6 +140,7 @@ export default {
     ElRadioGroup,
     ElRadio,
     ElCascader,
+    ElColorPicker,
     ElTooltip,
     QuestionIcon
   }
@@ -158,6 +160,7 @@ const TYPE_COMPONENT_MAP = {
   float: 'el-input-number',
   enum: 'el-select',
   slider: 'el-slider',
+  color: 'el-color-picker',
   url: 'el-input'
 }
 

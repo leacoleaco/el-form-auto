@@ -275,6 +275,9 @@ const descriptors = reactive({
   date1: {
     type: 'date'
   },
+  color1: {
+    type: 'color'
+  },
   custom1: {
     type: 'custom',
     defaultValue: 'default value test',
