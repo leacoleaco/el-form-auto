@@ -74,7 +74,15 @@
                    :enum-source="enumSource"
                    :prop="prop"
                    :descriptor="descriptor.itemDescriptor"
-        ></component>
+        >
+          <!--pass the parent's slots to child component-->
+          <template
+              v-for="(_ , name) in $slots"
+              v-slot:[name]="data"
+          >
+            <slot :name="name" v-bind="data"/>
+          </template>
+        </component>
         <div v-else>
           <!--notice: here is the item's layout, node collection's layout, so the data is the object-->
           <form-item
