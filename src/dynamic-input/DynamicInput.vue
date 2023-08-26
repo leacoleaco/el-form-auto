@@ -34,6 +34,42 @@
           :disabled="(typeof option==='object')?option.disabled:false"
       />
     </el-select>
+    <el-checkbox-group
+        v-else-if="descriptor.type === 'enum'&&(!descriptor.enumComponent||descriptor.enumComponent==='checkbox')"
+        :model-value="props.modelValue"
+        @update:modelValue="updateValue"
+        class="dynamic-input"
+        v-bind="bind"
+        :class="{'multi-select': descriptor.multiple}"
+        :size="size"
+        :multiple="descriptor.multiple"
+        v-on="on"
+    >
+      <el-checkbox
+          v-for="option in props.descriptor.enumSourceKey?props.enumSource[props.descriptor.enumSourceKey]:props.descriptor.options"
+          :key="(typeof option ==='object')?option.label:option"
+          :value="(typeof option ==='object')?option.value:option"
+          :label="(typeof option ==='object')?option.label:option"
+          :disabled="(typeof option==='object')?option.disabled:false"
+      />
+    </el-checkbox-group>
+    <el-radio-group
+        v-else-if="descriptor.type === 'enum'&&(!descriptor.enumComponent||descriptor.enumComponent==='radio')"
+        :model-value="props.modelValue"
+        @update:modelValue="updateValue"
+        class="dynamic-input"
+        v-bind="bind"
+        :size="size"
+        v-on="on"
+    >
+      <el-radio
+          v-for="option in props.descriptor.enumSourceKey?props.enumSource[props.descriptor.enumSourceKey]:props.descriptor.options"
+          :key="(typeof option ==='object')?option.label:option"
+          :value="(typeof option ==='object')?option.value:option"
+          :label="(typeof option ==='object')?option.label:option"
+          :disabled="(typeof option==='object')?option.disabled:false"
+      />
+    </el-radio-group>
     <!-- enum type use el-cascader -->
     <el-cascader
         v-else-if="descriptor.type === 'enum'&&descriptor.enumComponent==='cascader'"
@@ -77,6 +113,10 @@ import {
   ElDatePicker,
   ElSwitch,
   ElSlider,
+  ElCheckboxGroup,
+  ElCheckbox,
+  ElRadioGroup,
+  ElRadio,
   ElCascader,
   ElTooltip
 } from 'element-plus'
@@ -94,6 +134,10 @@ export default {
     ElDatePicker,
     ElSwitch,
     ElSlider,
+    ElCheckboxGroup,
+    ElCheckbox,
+    ElRadioGroup,
+    ElRadio,
     ElCascader,
     ElTooltip,
     QuestionIcon

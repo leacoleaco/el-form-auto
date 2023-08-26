@@ -244,6 +244,29 @@ const descriptors = reactive({
     enumSourceKey: 'testKey',
     placeholder: 'Please choose'
   },
+  checkbox1: {
+    type: 'enum',
+    label: 'Checkbox',
+    multiple: true,
+    enumComponent: 'checkbox',
+    options: [
+      {label: 'Orange', value: 0},
+      {label: 'Banana', value: 1},
+      {label: 'Apple', value: 2}
+    ],
+    placeholder: 'Please choose some fruits'
+  },
+  radio1: {
+    type: 'enum',
+    label: 'Radio',
+    enumComponent: 'radio',
+    options: [
+      {label: 'Orange', value: 0},
+      {label: 'Banana', value: 1},
+      {label: 'Apple', value: 2}
+    ],
+    placeholder: 'Please choose some fruits'
+  },
   cascader1: {
     type: 'enum',
     enumComponent: 'cascader',
