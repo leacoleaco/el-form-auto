@@ -62,39 +62,53 @@
         />
       </component>
       <component v-else class="sub-dynamic-form array"
-           :is="descriptor.component || 'div'"
-           :style="{backgroundColor: subFormBackgroundColor}">
-        <form-item
-            v-for="(temp, key) in props.modelValue"
-            :key="key"
-            v-model="props.modelValue[key]"
-            :data="data"
-            :enum-source="enumSource"
-            :prop="prop ? prop + '.' + key : key"
-            :deletable="true"
-            :descriptor="descriptor.itemDescriptor"
-            label-width="0px"
-            :background-color="subFormBackgroundColor"
-            :show-outer-error="showOuterError"
-            @delete="deleteItem(key)"
-            @fieldInput="e=>$emit('fieldInput',e)"
-        >
-          <!--pass the parent's slots to child component-->
-          <template
-              v-for="(_ , name) in $slots"
-              v-slot:[name]="data"
+                 :is="descriptor.component || 'div'"
+                 :style="{backgroundColor: subFormBackgroundColor}">
+
+        <!--layout component, like TableLayout.vue etc.-->
+        <!--notice: here is the collection's layout, so the data is a array-->
+        <component v-if="descriptor.layoutComponent"
+                   :is="descriptor.layoutComponent"
+                   v-model="props.modelValue"
+                   :data="data"
+                   :enum-source="enumSource"
+                   :prop="prop"
+                   :descriptor="descriptor.itemDescriptor"
+        ></component>
+        <div v-else>
+          <!--notice: here is the item's layout, node collection's layout, so the data is the object-->
+          <form-item
+              v-for="(temp, key) in props.modelValue"
+              :key="temp"
+              v-model="props.modelValue[key]"
+              :data="data"
+              :enum-source="enumSource"
+              :prop="prop ? prop + '.' + key : key"
+              :deletable="true"
+              :descriptor="descriptor.itemDescriptor"
+              label-width="0px"
+              :background-color="subFormBackgroundColor"
+              :show-outer-error="showOuterError"
+              @delete="deleteItem(key)"
+              @fieldInput="e=>$emit('fieldInput',e)"
           >
-            <slot :name="name" v-bind="data"/>
-          </template>
-        </form-item>
-      </component>
-      <component
-          :is="descriptor.addButtonComponent || 'div'"
-          class="add-key-input-group">
-        <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
-          <add-icon class="icon"/>
-          {{ descriptor.addButtonText || 'add' }}
-        </el-button>
+            <!--pass the parent's slots to child component-->
+            <template
+                v-for="(_ , name) in $slots"
+                v-slot:[name]="data"
+            >
+              <slot :name="name" v-bind="data"/>
+            </template>
+          </form-item>
+        </div>
+        <component
+            :is="descriptor.addButtonComponent || 'div'"
+            class="add-key-input-group">
+          <el-button class="addButton" type="primary" :icon="plus" :size="size" plain @click="addArrayItem">
+            <add-icon class="icon"/>
+            {{ descriptor.addButtonText || 'add' }}
+          </el-button>
+        </component>
       </component>
     </template>
     <!-- if type is wrap -->
@@ -449,8 +463,8 @@ function deleteItem(index) {
 
   .icon {
     color: #F56C6C;
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
   }
 }
 

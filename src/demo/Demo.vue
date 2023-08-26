@@ -146,11 +146,13 @@ export default {
 import {ElMessage} from 'element-plus'
 import {ref, reactive, watch} from "vue";
 import {ElSwitch, ElRow, ElCol, ElTable, ElTableColumn} from "element-plus";
+import LeaAutoFormTableLayout from '@/lea-auto-form/TableLayout.vue'
 
 const data = ref({
   number2: 99,
   number3: "xxx",
   list1: [{text1: 'I am an array item1'}],
+  list2: [{text1: 'I am an array item2'}],
   wrap1: {
     text1: "test"
   }
@@ -259,6 +261,75 @@ const descriptors = reactive({
     type: 'array',
     label: 'Array Field',
     addButtonText: 'Custom Add Button Name',
+    itemDescriptor: {
+      type: 'object',
+      fields: {
+        text1: {
+          type: 'text',
+          label: 'Text Field',
+          min: 1,
+          defaultValue: '',
+          component: {
+            name: 'el-input', props: {type: 'textarea'}
+          },
+          rules: [
+            {required: true, message: 'you need to input text'}
+          ],
+          tooltip: {
+            content: 'This is tooltip'
+          }
+        },
+        boolean2: {
+          type: 'boolean',
+          defaultValue: true
+        },
+        number1: {
+          type: 'number',
+          label: 'Number Field',
+          defaultValue: 999,
+          rules: [
+            {required: true},
+            {
+              type: 'number',
+              validator(rule, value, callback, source, options) {
+                return new Promise(function (resolve, reject) {
+                  const errors = []
+                  if (value <= 0) {
+                    errors.push('number must greater than 0')
+                  }
+                  reject(errors)
+                })
+              }
+            }
+          ]
+        },
+        list2: {
+          type: 'array',
+          label: 'Nested Array Field',
+          defaultValue: [],
+          itemDescriptor: {
+            type: 'object',
+            fields: {
+              number6: {
+                type: 'number',
+                defaultValue: 2
+              },
+              nested2: {
+                type: 'custom',
+                slotName: 'nestedSlotName',
+                defaultValue: {age: 18}
+              },
+            }
+          }
+        }
+      }
+    }
+  },
+  list2: {
+    type: 'array',
+    label: 'Table Array',
+    addButtonText: 'Custom Add Button Name',
+    layoutComponent: LeaAutoFormTableLayout,
     itemDescriptor: {
       type: 'object',
       fields: {
