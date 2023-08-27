@@ -23,6 +23,8 @@
           :data="data"
           :placeholder="descriptor.placeholder"
           :descriptor="descriptor"
+          :parentValue="parentValue"
+          :parentDescriptor="parentDescriptor"
       />
       <slot
           v-else
@@ -34,6 +36,8 @@
           :data="data"
           :placeholder="descriptor.placeholder"
           :descriptor="descriptor"
+          :parentValue="parentValue"
+          :parentDescriptor="parentDescriptor"
       />
     </template>
     <!--simple type -->
