@@ -168,10 +168,6 @@ const props = defineProps({
   modelValue: {
     required: true
   },
-  field: {
-    type: String,
-    required: true
-  },
   size: {
     type: String,
     default: 'small'

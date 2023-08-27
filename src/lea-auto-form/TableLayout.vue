@@ -55,6 +55,20 @@ const props = defineProps({
     required: true
   },
   /**
+   * get parent's value if in wrap or array
+   */
+  parentValue: {
+    type: [Object, Array],
+    default: undefined
+  },
+  /**
+   * get parent's descriptor if in wrap or array
+   */
+  parentDescriptor: {
+    type: Object,
+    default: undefined
+  },
+  /**
    * the form's global enumSource
    */
   enumSource: {

@@ -43,7 +43,7 @@
           >
 
             <!--use custom component -->
-            <template #field$custom1="{value,setValue,data,placeholder}">
+            <template #field$custom1="{value,setValue,data,placeholder, parentValue, parentDescriptor}">
               <div>we can use slot name 'field$'+prop here to obtain a reference to the corresponding
                 component.
               </div>
@@ -61,7 +61,7 @@
             </template>
 
             <!--use custom slot name for custom component-->
-            <template #customSlotName="{value,setValue,data, placeholder}">
+            <template #customSlotName="{value,setValue,data, placeholder, parentValue, parentDescriptor}">
               <div>
                 custom2: {{ value }}
               </div>
@@ -74,7 +74,7 @@
             </template>
 
             <!--use custom slot name for custom component-->
-            <template #field$custom3="{value,setValue,data, placeholder}">
+            <template #field$custom3="{value,setValue,data, placeholder, parentValue, parentDescriptor}">
               <custom-component
                   :model-value="value"
                   @update:modelValue="setValue"
@@ -82,7 +82,7 @@
               </custom-component>
             </template>
 
-            <template #nestedSlotName="{value,setValue,data, placeholder}">
+            <template #nestedSlotName="{value,setValue,data, placeholder, parentValue, parentDescriptor}">
               <div>
                 <div>nested data: {{ value }}</div>
                 <nested-component

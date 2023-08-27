@@ -74,6 +74,8 @@
                    :enum-source="enumSource"
                    :prop="prop"
                    :descriptor="descriptor.itemDescriptor"
+                   :parent-descriptor="descriptor"
+                   :parent-value="props.modelValue"
         >
           <!--pass the parent's slots to child component-->
           <template
@@ -94,6 +96,10 @@
               :prop="prop ? prop + '.' + key : key"
               :deletable="true"
               :descriptor="descriptor.itemDescriptor"
+
+              :parent-descriptor="descriptor"
+              :parent-value="props.modelValue"
+
               label-width="0px"
               :background-color="subFormBackgroundColor"
               :show-outer-error="showOuterError"
@@ -136,6 +142,8 @@
             :label="subDesc.label || key"
             :prop="`${prop}.${key}`"
             :descriptor="subDesc"
+            :parent-descriptor="descriptor"
+            :parent-value="props.modelValue"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
         >
@@ -166,6 +174,8 @@
             :label="_descriptor.label || key"
             :prop="prop ? prop + '.' + key : key"
             :descriptor="_descriptor"
+            :parent-descriptor="descriptor"
+            :parent-value="props.modelValue"
             :label-width="getLabelWidth(descriptor.fields, fontSize)"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
@@ -197,6 +207,8 @@
             :prop="prop ? prop + '.' + key : key"
             :deletable="true"
             :descriptor="descriptor.itemDescriptor"
+            :parent-descriptor="descriptor"
+            :parent-value="props.modelValue"
             :label-width="getLabelWidth(props.modelValue, fontSize)"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
@@ -318,6 +330,22 @@ const props = defineProps({
     type: Object,
     required: true
   },
+
+  /**
+   * get parent's value if in wrap or array
+   */
+  parentValue: {
+    type: [Object, Array],
+    default: undefined
+  },
+  /**
+   * get parent's descriptor if in wrap or array
+   */
+  parentDescriptor: {
+    type: Object,
+    default: undefined
+  },
+
   /**
    * the form's global enumSource
    */
