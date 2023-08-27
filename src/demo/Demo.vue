@@ -85,9 +85,21 @@
             <template #nestedSlotName="{value,setValue,data, placeholder, parentValue, parentDescriptor}">
               <div>
                 <div>nested data: {{ value }}</div>
+                <div>parent value: {{ parentValue }}</div>
                 <nested-component
                     :model-value="value"
                     @update:modelValue="setValue"/>
+              </div>
+            </template>
+
+            <template #customWrapSlot="{value,setValue,data, placeholder, parentValue, parentDescriptor}">
+              <div>
+                <div>parent value: {{ parentValue }}</div>
+                <div>current value: {{ value }}</div>
+                <el-input type="text"
+                       :model-value="value"
+                       @update:modelValue="setValue"
+                />
               </div>
             </template>
 
@@ -484,6 +496,10 @@ const descriptors = reactive({
           content: "This is tooltip"
         },
       },
+      custom: {
+        type: 'custom',
+        slotName: 'customWrapSlot',
+      }
     }
   },
   obj1: {

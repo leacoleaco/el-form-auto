@@ -147,7 +147,7 @@
             :prop="`${prop}.${key}`"
             :descriptor="subDesc"
             :parent-descriptor="parentDescriptor"
-            :parent-value="parentValue"
+            :parent-value="props.modelValue"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
         >
