@@ -26,6 +26,8 @@
               :prop="key"
               :label-width="labelWidth"
               :descriptor="descriptor"
+              :parent-descriptor="descriptors"
+              :parent-value="modelValue"
               :size="size"
               :background-color="backgroundColor"
               :bg-color-offset="bgColorOffset"
