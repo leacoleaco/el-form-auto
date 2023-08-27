@@ -78,8 +78,8 @@
                    :enum-source="enumSource"
                    :prop="prop"
                    :descriptor="descriptor.itemDescriptor"
-                   :parent-descriptor="descriptor"
-                   :parent-value="props.modelValue"
+                   :parent-descriptor="parentDescriptor"
+                   :parent-value="parentValue"
         >
           <!--pass the parent's slots to child component-->
           <template
@@ -146,8 +146,8 @@
             :label="subDesc.label || key"
             :prop="`${prop}.${key}`"
             :descriptor="subDesc"
-            :parent-descriptor="descriptor"
-            :parent-value="props.modelValue"
+            :parent-descriptor="parentDescriptor"
+            :parent-value="parentValue"
             :background-color="subFormBackgroundColor"
             :show-outer-error="showOuterError"
         >
