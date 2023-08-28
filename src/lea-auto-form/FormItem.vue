@@ -132,20 +132,23 @@
       </component>
 
       <!--add on , to display extra content behind form items-->
-      <slot v-if="descriptor.addon"
-            :name="descriptor.addon.slotName"
-            :settings="descriptor.addon.settings"
-            :value="props.modelValue"
-            :setValue="updateValue"
-            :modelValue="props.modelValue"
-            :updateModelValue="updateValue"
-            :data="data"
-            :prop="prop"
-            :placeholder="descriptor.placeholder"
-            :descriptor="descriptor"
-            :parentValue="parentValue"
-            :parentDescriptor="parentDescriptor"
-      />
+      <template v-if="descriptor.addons">
+        <slot v-for="(addon,p) in descriptor.addons"
+              :key="p"
+              :name="addon.slotName"
+              :settings="addon.settings"
+              :value="props.modelValue"
+              :setValue="updateValue"
+              :modelValue="props.modelValue"
+              :updateModelValue="updateValue"
+              :data="data"
+              :prop="prop"
+              :placeholder="descriptor.placeholder"
+              :descriptor="descriptor"
+              :parentValue="parentValue"
+              :parentDescriptor="parentDescriptor"
+        />
+      </template>
 
     </template>
     <!-- if type is wrap -->
@@ -180,20 +183,23 @@
         </form-item>
 
         <!--add on, in order to display some extra info behind the wrap form-->
-        <slot v-if="descriptor.addon"
-              :name="descriptor.addon.slotName"
-              :settings="descriptor.addon.settings"
-              :value="props.modelValue"
-              :setValue="updateValue"
-              :modelValue="props.modelValue"
-              :updateModelValue="updateValue"
-              :data="data"
-              :prop="prop"
-              :placeholder="descriptor.placeholder"
-              :descriptor="descriptor"
-              :parentValue="parentValue"
-              :parentDescriptor="parentDescriptor"
-        />
+        <template v-if="descriptor.addons">
+          <slot v-for="(addon,p) in descriptor.addons"
+                :key="p"
+                :name="addon.slotName"
+                :settings="addon.settings"
+                :value="props.modelValue"
+                :setValue="updateValue"
+                :modelValue="props.modelValue"
+                :updateModelValue="updateValue"
+                :data="data"
+                :prop="prop"
+                :placeholder="descriptor.placeholder"
+                :descriptor="descriptor"
+                :parentValue="parentValue"
+                :parentDescriptor="parentDescriptor"
+          />
+        </template>
       </div>
     </template>
     <!-- if type is object or hashmap -->

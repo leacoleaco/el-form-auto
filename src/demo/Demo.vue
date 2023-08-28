@@ -389,12 +389,12 @@ const descriptors = reactive({
         }
       }
     },
-    addon: {
+    addons: [{
       slotName: 'addOnTemplate',
       settings: [{
         settingA: 'i am add on setting for array'
       }]
-    }
+    }]
   },
   list2: {
     type: 'array',
@@ -518,12 +518,12 @@ const descriptors = reactive({
         slotName: 'customWrapSlot',
       }
     },
-    addon: {
+    addons: [{
       slotName: 'addOnTemplate',
       settings: [{
         settingA: 'i am add on setting for wrap'
       }]
-    }
+    }]
   },
   obj1: {
     type: 'object',
