@@ -20,7 +20,7 @@ export default {
 
 <script setup>
 import {defineProps, defineEmits, defineExpose, ref, watch, getCurrentInstance} from 'vue'
-import {registerInstance} from "@/lea-auto-form/regist-util";
+import {registerInstance} from "../lea-auto-form/regist-util";
 
 const props = defineProps({
     modelValue: {

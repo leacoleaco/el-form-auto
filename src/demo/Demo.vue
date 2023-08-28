@@ -130,9 +130,9 @@
 </template>
 
 <script>
-import LeaAutoForm from '@/lea-auto-form/Form.vue'
-import CustomComponent from '@/demo/CustomComponent.vue'
-import NestedComponent from '@/demo/NestedComponent.vue'
+import LeaAutoForm from '../lea-auto-form/Form.vue'
+import CustomComponent from '../demo/CustomComponent.vue'
+import NestedComponent from '../demo/NestedComponent.vue'
 import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton } from 'element-plus'
 
 export default {
@@ -169,7 +169,7 @@ export default {
 import {ElMessage} from 'element-plus'
 import {ref, reactive, watch} from "vue";
 import {ElSwitch, ElRow, ElCol, ElTable, ElTableColumn} from "element-plus";
-import LeaAutoFormTableLayout from '@/lea-auto-form/TableLayout.vue'
+import LeaAutoFormTableLayout from '../lea-auto-form/TableLayout.vue'
 import cascaderOptions from './data/CascaderOptions.js'
 
 const data = ref({

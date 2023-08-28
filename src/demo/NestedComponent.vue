@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import LeaAutoForm from '@/lea-auto-form/Form.vue'
+import LeaAutoForm from '../lea-auto-form/Form.vue'
 
 export default {
   name: 'NestedComponent',

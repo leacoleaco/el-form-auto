@@ -10,7 +10,7 @@ export default {
 </script>
 <script setup>
 import {defineProps} from 'vue'
-import CloseIcon from "@/components/CloseIcon.vue";
+import CloseIcon from "../components/CloseIcon.vue";
 
 const props = defineProps({
   modelValue: {
