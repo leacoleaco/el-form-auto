@@ -54,8 +54,8 @@
 
 <script>
 import { ElForm, ElFormItem } from 'element-plus'
-import FormItem from '@/lea-auto-form/FormItem.vue'
-import { providePublicRegister, publicRegisterInstance } from '@/lea-auto-form/regist-util'
+import FormItem from './FormItem.vue'
+import { providePublicRegister, publicRegisterInstance } from './regist-util'
 
 export default {
   name: 'LeaAutoForm',
@@ -72,7 +72,7 @@ export default {
 </script>
 
 <script setup>
-import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '@/util/utils'
+import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
 import {
   ref,
   isRef,
@@ -82,7 +82,7 @@ import {
   reactive,
   getCurrentInstance
 } from 'vue'
-import {provideRegister, publicRegisterInstance, registerInstance} from "@/lea-auto-form/regist-util";
+import {provideRegister, publicRegisterInstance, registerInstance} from "./regist-util";
 
 const props = defineProps({
   modelValue: {

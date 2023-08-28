@@ -1,6 +1,6 @@
 <script>
 import { ElTable, ElTableColumn, ElButton } from 'element-plus'
-import FormItem from '@/lea-auto-form/FormItem.vue'
+import FormItem from '../FormItem.vue'
 
 export default {
   components: {

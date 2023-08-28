@@ -324,10 +324,10 @@ import {
   makeRefValueFromDescriptor,
   getLabelWidth,
   isComplexDataType
-} from "@/util/utils";
+} from "../util/utils";
 
-import AddIcon from "@/components/AddIcon.vue";
-import CloseIcon from "@/components/CloseIcon.vue";
+import AddIcon from "../components/AddIcon.vue";
+import CloseIcon from "../components/CloseIcon.vue";
 
 const hashMapKey = ref('')
 
