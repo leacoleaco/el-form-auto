@@ -130,6 +130,23 @@
           </el-button>
         </component>
       </component>
+
+      <!--add on , to display extra content behind form items-->
+      <slot v-if="descriptor.addon"
+            :name="descriptor.addon.slotName"
+            :settings="descriptor.addon.settings"
+            :value="props.modelValue"
+            :setValue="updateValue"
+            :modelValue="props.modelValue"
+            :updateModelValue="updateValue"
+            :data="data"
+            :prop="prop"
+            :placeholder="descriptor.placeholder"
+            :descriptor="descriptor"
+            :parentValue="parentValue"
+            :parentDescriptor="parentDescriptor"
+      />
+
     </template>
     <!-- if type is wrap -->
     <template v-else-if="descriptor.type === 'wrap'">
@@ -161,6 +178,22 @@
             <slot :name="name" v-bind="data"/>
           </template>
         </form-item>
+
+        <!--add on, in order to display some extra info behind the wrap form-->
+        <slot v-if="descriptor.addon"
+              :name="descriptor.addon.slotName"
+              :settings="descriptor.addon.settings"
+              :value="props.modelValue"
+              :setValue="updateValue"
+              :modelValue="props.modelValue"
+              :updateModelValue="updateValue"
+              :data="data"
+              :prop="prop"
+              :placeholder="descriptor.placeholder"
+              :descriptor="descriptor"
+              :parentValue="parentValue"
+              :parentDescriptor="parentDescriptor"
+        />
       </div>
     </template>
     <!-- if type is object or hashmap -->

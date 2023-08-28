@@ -93,13 +93,24 @@
             </template>
 
             <template #customWrapSlot="{value,setValue,data, placeholder, parentValue, parentDescriptor}">
-              <div>
-                <div>parent value: {{ parentValue }}</div>
-                <div>current value: {{ value }}</div>
+              <div style="color: #999999">
+                <div>custom template in wrap field</div>
+                <div>current value is: {{ value }}</div>
                 <el-input type="text"
-                       :model-value="value"
-                       @update:modelValue="setValue"
+                          :model-value="value"
+                          @update:modelValue="setValue"
                 />
+              </div>
+            </template>
+
+            <template #addOnTemplate="{value,setValue,settings,data, placeholder, parentValue, parentDescriptor}">
+              <div style="border: solid 1px #d2d2d2; padding:3px 5px;background: #eef2f3">
+                <div>
+                  This is a add on template,
+                  we can use it to add some extra content to the form item:
+                </div>
+                <div> current template value: {{ value }}</div>
+                <div> current template settings : {{ settings }}</div>
               </div>
             </template>
 
@@ -377,6 +388,12 @@ const descriptors = reactive({
           }
         }
       }
+    },
+    addon: {
+      slotName: 'addOnTemplate',
+      settings: [{
+        settingA: 'i am add on setting for array'
+      }]
     }
   },
   list2: {
@@ -500,6 +517,12 @@ const descriptors = reactive({
         type: 'custom',
         slotName: 'customWrapSlot',
       }
+    },
+    addon: {
+      slotName: 'addOnTemplate',
+      settings: [{
+        settingA: 'i am add on setting for wrap'
+      }]
     }
   },
   obj1: {
