@@ -1,6 +1,6 @@
 <script>
-import { ElTable, ElTableColumn, ElButton } from 'element-plus'
-import FormItem from '../FormItem.vue'
+import {ElButton, ElTable, ElTableColumn} from 'element-plus'
+import FormItem from './FormItem.vue'
 
 export default {
   components: {
