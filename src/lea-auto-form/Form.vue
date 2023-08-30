@@ -53,9 +53,9 @@
 </template>
 
 <script>
-import { ElForm, ElFormItem } from 'element-plus'
+import {ElForm, ElFormItem} from 'element-plus'
 import FormItem from './FormItem.vue'
-import { providePublicRegister, publicRegisterInstance } from './regist-util'
+import {publicRegisterInstance} from './regist-util'
 
 export default {
   name: 'LeaAutoForm',
@@ -64,23 +64,20 @@ export default {
     ElForm,
     ElFormItem
   },
-  methods: {},
-  publicRegisterInstance,
-  providePublicRegister
+  methods: {}
 }
 
 </script>
 
 <script setup>
-import {isComplexDataType, getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
+import { getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
 import {
   ref,
   isRef,
   isReactive,
   watch,
   computed,
-  reactive,
-  getCurrentInstance
+  getCurrentInstance,
 } from 'vue'
 import {provideRegister, publicRegisterInstance, registerInstance} from "./regist-util";
 
@@ -181,22 +178,17 @@ const props = defineProps({
   }
 })
 
-const doValidate = ref(false)
-
 const refForm = ref(null)
 const refFormItems = ref([])
 
-watch(
-    () => props.descriptors,
-    () => {
-      init()
-    }
-)
+const value = ref({})
 
-const value = props.modelValue
+const emit = defineEmits(['update:modelValue', 'fieldInput'])
 
 function updateValue(prop, v) {
-  value[prop] = v
+  value.value[prop] = v
+  // console.log('updateValue', prop, JSON.stringify(v))
+  emit('update:modelValue', value.value)
 }
 
 const labelWidth = computed(() => getLabelWidth(props.descriptors, props.fontSize))
@@ -208,21 +200,37 @@ const style = computed(() => {
   }
 })
 
-function init() {
-  initValue()
-}
-
 function initValue() {
-  if (value && !isRef(value) && !isReactive(value)) {
+  const v = value.value
+  if (v && !isRef(v) && !isReactive(v)) {
     throw Error(`auto form's value is not reacctive, you need use ref() or reactive()`)
   }
-  if (!isRef(value) && !isReactive(value)) {
+  if (!isRef(v) && !isReactive(v)) {
     throw Error(`value is not reacctive, you need use ref() or reactive()`)
   }
   for (const key in props.descriptors) {
-    setValueKey(value, key, props.descriptors[key])
+    setValueKey(v, key, props.descriptors[key])
   }
 }
+
+// init value when created
+// deep clone obj
+value.value = props.modelValue
+initValue()
+
+watch(
+    () => props.descriptors,
+    (v) => {
+      initValue()
+    },
+)
+watch(
+    () => props.modelValue,
+    (v) => {
+      value.value = v
+      initValue()
+    },
+)
 
 function setValueKey(refValue, fieldKey, descriptor) {
   if (descriptor === undefined || descriptor === null) {
@@ -232,8 +240,6 @@ function setValueKey(refValue, fieldKey, descriptor) {
 
   refValue[fieldKey] = makeRefValueFromDescriptor(refValue[fieldKey], descriptor)
 }
-
-init()
 
 /**
  * validate form and the children nested form
