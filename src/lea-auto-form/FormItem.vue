@@ -300,7 +300,7 @@
 </template>
 
 <script>
-import { ElButton, ElInput, ElFormItem, ElAlert } from 'element-plus'
+import {ElAlert, ElButton, ElFormItem, ElInput} from 'element-plus'
 
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
@@ -417,7 +417,7 @@ const props = defineProps({
    */
   backgroundColor: {
     type: String,
-    default: '#FFFFFF'
+    default: undefined
   },
   /**
    * darken sub-form's background-color with offset if got positive integer

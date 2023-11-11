@@ -55,7 +55,6 @@
 <script>
 import {ElForm, ElFormItem} from 'element-plus'
 import FormItem from './FormItem.vue'
-import {publicRegisterInstance} from './regist-util'
 
 export default {
   name: 'LeaAutoForm',
@@ -130,7 +129,7 @@ const props = defineProps({
    */
   backgroundColor: {
     type: String,
-    default: '#FFFFFF'
+    default: undefined
   },
   /**
    * font-size of form
@@ -308,19 +307,3 @@ defineExpose({
   clearValidate
 })
 </script>
-
-<style lang="scss">
-// cover element's css avoid the nested error style
-.form {
-  background: none;
-
-  .el-form-item.is-success, .add-key-input-group {
-    .el-input__inner,
-    .el-input__inner:focus,
-    .el-textarea__inner,
-    .el-textarea__inner:focus {
-      border-color: #DCDFE6;
-    }
-  }
-}
-</style>
