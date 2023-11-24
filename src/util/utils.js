@@ -45,6 +45,7 @@ export function getLabelWidth (descriptors, fontSize) {
 const DARKEST_COLOR = 150
 
 export function darkenColor (color, offset) {
+  if (!color) return color
   if (offset === 0) return color
   if (color[0] === '#') color = color.slice(1)
   offset = parseInt(offset)
