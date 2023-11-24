@@ -28,9 +28,14 @@
         </el-button>
       </el-col>
       <el-col :span="15">
-        <div>the form will auto generate by the descriptor we input:</div>
-        <el-switch v-model="switchLayout" active-text="Another Layout" inactive-text="Default Layout"></el-switch>
-        <div style="padding: 20px;background: #efefef">
+        <div style="color:blueviolet">the form will auto generate by the descriptor we input:
+          <el-select v-model="switchLayout" placeholder="select layout">
+            <el-option label="Default Layout" value=""></el-option>
+            <el-option label="Row Layout" value="row"></el-option>
+            <el-option label="Tab Layout" value="tab"></el-option>
+          </el-select>
+        </div>
+        <div style="padding: 20px;margin-top:10px;background: #efefef">
           <lea-auto-form
               ref="refAutoForm"
               :descriptors="descriptors"
@@ -133,11 +138,11 @@
 import LeaAutoForm from '../lea-auto-form/Form.vue'
 import CustomComponent from '../demo/CustomComponent.vue'
 import NestedComponent from '../demo/NestedComponent.vue'
-import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton } from 'element-plus'
+import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton, ElSelect, ElOption } from 'element-plus'
 
 export default {
   name: 'Demo',
-  components: { CustomComponent, NestedComponent, LeaAutoForm, ElRow, ElCol, ElTimeSelect, ElInput, ElButton },
+  components: { CustomComponent, NestedComponent, LeaAutoForm, ElRow, ElCol, ElTimeSelect, ElInput, ElButton, ElSelect, ElOption },
   methods: {
     validate () {
       let refAutoForm = this.$refs.refAutoForm
@@ -165,10 +170,9 @@ export default {
 </script>
 
 <script setup>
-
 import {ElMessage} from 'element-plus'
 import {ref, reactive, watch} from "vue";
-import {ElSwitch, ElRow, ElCol, ElTable, ElTableColumn} from "element-plus";
+import {ElSwitch, ElRow, ElCol, ElTabs, ElTabPane, ElTable, ElTableColumn} from "element-plus";
 import LeaAutoFormTableLayout from '../lea-auto-form/TableLayout.vue'
 import cascaderOptions from './data/CascaderOptions.js'
 
@@ -572,9 +576,11 @@ const parentLayoutProps = ref({})
 const defaultItemComponent = ref('div')
 const defaultItemComponentProps = ref({})
 
-const switchLayout = ref(false)
+const switchLayout = ref("")
+
 watch(switchLayout, (newVal) => {
-  if (newVal) {
+  if (newVal === "row") {
+    //you can use any parent component you want with binding component
     parentComponent.value = ElRow
     defaultItemComponent.value = ElCol
     parentLayoutProps.value = {
@@ -582,6 +588,18 @@ watch(switchLayout, (newVal) => {
     }
     defaultItemComponentProps.value = {
       span: 12
+    }
+  } else if (newVal === 'tab') {
+    //you can use any parent component you want with binding component
+    parentComponent.value = ElTabs
+    defaultItemComponent.value = ElTabPane
+    parentLayoutProps.value = {
+      type: 'border-card'
+    }
+    defaultItemComponentProps.value = function (key, value, descriptor) {
+      return {
+        label: descriptor.label || key
+      }
     }
   } else {
     parentComponent.value = 'div'

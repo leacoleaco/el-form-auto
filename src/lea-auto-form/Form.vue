@@ -9,10 +9,10 @@
         :size="size"
         :label-position="labelPosition"
     >
-      <component :is="defaultParentComponent" v-bind="defaultParentComponentProps">
+      <component :is="defaultParentComponent" v-bind="calcDefaultParentComponentProps(value,descriptors)">
         <component
             :is="defaultItemComponent||descriptors.layout"
-            v-bind="defaultItemComponentProps||descriptors.layoutProps"
+            v-bind="calcDefaultItemComponentProps(key,value[key],descriptor)||descriptors.layoutProps"
             v-for="(descriptor, key) in descriptors"
             :key="key">
           <form-item
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import {ElForm, ElFormItem} from 'element-plus'
+import { ElForm, ElFormItem } from 'element-plus'
 import FormItem from './FormItem.vue'
 
 export default {
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <script setup>
-import { getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
+import {getLabelWidth, makeRefValueFromDescriptor} from '../util/utils'
 import {
   ref,
   isRef,
@@ -163,16 +163,28 @@ const props = defineProps({
     type: [String, Object],
     default: 'div'
   },
+  /**
+   * default parent component props
+   * if you want to use function, you can use like this:
+   * (value,descriptors)=>{return {label:`Name:${value}`}}
+   * otherwise ,you can return object directly
+   */
   defaultParentComponentProps: {
-    type: Object,
+    type: [Object, Function],
     default: {}
   },
   defaultItemComponent: {
     type: [String, Object],
     default: 'div'
   },
+  /**
+   * default item component props
+   * if you want to use function, you can use like this:
+   * (key,value,descriptor)=>{return {label:`Name:${value}`}}
+   * otherwise ,you can return object directly
+   */
   defaultItemComponentProps: {
-    type: Object,
+    type: [Object, Function],
     default: {}
   }
 })
@@ -272,6 +284,20 @@ function validateCurrentForm() {
       resolve(true)
     }
   })
+}
+
+function calcDefaultParentComponentProps(value, descriptors) {
+  if (typeof props.defaultParentComponentProps === 'function') {
+    return props.defaultParentComponentProps(value, descriptors)
+  }
+  return props.defaultParentComponentProps
+}
+
+function calcDefaultItemComponentProps(key, value, descriptor) {
+  if (typeof props.defaultItemComponentProps === 'function') {
+    return props.defaultItemComponentProps(key, value, descriptor)
+  }
+  return props.defaultItemComponentProps
 }
 
 /**
