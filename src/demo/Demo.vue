@@ -136,8 +136,8 @@
 
 <script>
 import LeaAutoForm from '../lea-auto-form/Form.vue'
-import CustomComponent from '../demo/CustomComponent.vue'
-import NestedComponent from '../demo/NestedComponent.vue'
+import CustomComponent from './CustomComponent.vue'
+import NestedComponent from './NestedComponent.vue'
 import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton, ElSelect, ElOption } from 'element-plus'
 
 export default {
@@ -175,6 +175,7 @@ import {ref, reactive, watch} from "vue";
 import {ElSwitch, ElRow, ElCol, ElTabs, ElTabPane, ElTable, ElTableColumn} from "element-plus";
 import LeaAutoFormTableLayout from '../lea-auto-form/TableLayout.vue'
 import cascaderOptions from './data/CascaderOptions.js'
+import AsyncTextComponent from './AsyncTextComponent.vue'
 
 const data = ref({
   number2: 99,
@@ -223,7 +224,17 @@ const descriptors = reactive({
       showIcon: true,
       closable: true,
       type: 'info',
-      message: 'This is an alert box'
+      message: 'This is an alert box,  <span style="color:orange">with html</span>',
+    }
+  },
+  number4: {
+    type: 'number',
+    label: 'complex alert',
+    alert: {
+      showIcon: true,
+      closable: true,
+      type: 'info',
+      messageComponent: AsyncTextComponent,
     }
   },
   slider1: {

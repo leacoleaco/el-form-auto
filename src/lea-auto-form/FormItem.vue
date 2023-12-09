@@ -293,14 +293,18 @@
     <el-alert
         v-if="descriptor.alert"
         v-bind="descriptor.alert"
-        style="margin: 3px 8px 0 0;padding:5px">
-      <div v-html="descriptor.alert?.message"/>
+        style="margin: 3px 8px 0 0">
+      <component
+          :is="descriptor.alert?.messageComponent || 'div'"
+          style="padding:5px">
+        <div v-html="descriptor.alert?.message"/>
+      </component>
     </el-alert>
   </el-form-item>
 </template>
 
 <script>
-import {ElAlert, ElButton, ElFormItem, ElInput} from 'element-plus'
+import { ElAlert, ElButton, ElFormItem, ElInput } from 'element-plus'
 
 import DynamicInput from '../dynamic-input/DynamicInput.vue'
 
