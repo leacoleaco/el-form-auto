@@ -120,7 +120,7 @@
             </template>
 
             <template #alertMessage="{value,settings,data, placeholder, parentValue, parentDescriptor}">
-              <AsyncTextComponent/>
+              <AsyncTextComponent :url="settings.url"/>
             </template>
           </lea-auto-form>
           <el-button @click="validate" type="primary">validate</el-button>
@@ -249,6 +249,9 @@ const descriptors = reactive({
       closable: true,
       type: 'info',
       messageSlot: "alertMessage",
+      props: {
+        url: 'https://v1.hitokoto.cn/?c=f&encode=text'
+      }
     }
   },
   slider1: {

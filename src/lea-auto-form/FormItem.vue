@@ -297,6 +297,7 @@
       <slot
           :name="descriptor.alert?.messageSlot"
           :value="props.modelValue"
+          :settings="descriptor.alert?.props"
           :data="data"
           :prop="prop"
           :placeholder="descriptor.placeholder"

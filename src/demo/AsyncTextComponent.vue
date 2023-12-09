@@ -1,5 +1,12 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, defineProps } from 'vue'
+
+const props = defineProps({
+  url: {
+    type: String,
+    required: true
+  }
+})
 
 const text = ref('')
 const loading = ref(false)
@@ -7,7 +14,7 @@ const loading = ref(false)
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await fetch('https://v1.hitokoto.cn/?c=f&encode=text')
+    const res = await fetch(props.url)
     text.value = await res.text()
   } finally {
     loading.value = false
