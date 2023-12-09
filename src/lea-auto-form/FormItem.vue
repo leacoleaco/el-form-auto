@@ -294,11 +294,18 @@
         v-if="descriptor.alert"
         v-bind="descriptor.alert"
         style="margin: 3px 8px 0 0">
-      <component
-          :is="descriptor.alert?.messageComponent || 'div'"
-          style="padding:5px">
+      <slot
+          :name="descriptor.alert?.messageSlot"
+          :value="props.modelValue"
+          :data="data"
+          :prop="prop"
+          :placeholder="descriptor.placeholder"
+          :descriptor="descriptor"
+          :parentValue="parentValue"
+          :parentDescriptor="parentDescriptor"
+      >
         <div v-html="descriptor.alert?.message"/>
-      </component>
+      </slot>
     </el-alert>
   </el-form-item>
 </template>

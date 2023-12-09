@@ -119,6 +119,9 @@
               </div>
             </template>
 
+            <template #alertMessage="{value,settings,data, placeholder, parentValue, parentDescriptor}">
+              <AsyncTextComponent/>
+            </template>
           </lea-auto-form>
           <el-button @click="validate" type="primary">validate</el-button>
           <el-button @click="clearValidate">clearValidate</el-button>
@@ -245,7 +248,7 @@ const descriptors = reactive({
       showIcon: true,
       closable: true,
       type: 'info',
-      messageComponent: AsyncTextComponent,
+      messageSlot: "alertMessage",
     }
   },
   slider1: {
