@@ -142,7 +142,18 @@ import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton, ElSelect, ElO
 
 export default {
   name: 'Demo',
-  components: { CustomComponent, NestedComponent, LeaAutoForm, ElRow, ElCol, ElTimeSelect, ElInput, ElButton, ElSelect, ElOption },
+  components: {
+    CustomComponent,
+    NestedComponent,
+    LeaAutoForm,
+    ElRow,
+    ElCol,
+    ElTimeSelect,
+    ElInput,
+    ElButton,
+    ElSelect,
+    ElOption
+  },
   methods: {
     validate () {
       let refAutoForm = this.$refs.refAutoForm
@@ -250,6 +261,19 @@ const descriptors = reactive({
   boolean1: {
     type: 'boolean',
     defaultValue: true
+  },
+  booleanReact: {
+    type: 'string',
+    hidden: true,
+    dependOnProp: 'boolean1',
+    placeholder: 'I\'ll show when boolean1 is checked'
+  },
+  booleanReactRevert: {
+    type: 'number',
+    hidden: true,
+    dependOnProp: 'boolean1',
+    dependOnPropRevert: true,
+    placeholder: 'I\'ll show when boolean1 is not checked'
   },
   enum1: {
     type: 'enum',

@@ -1,7 +1,7 @@
 <template>
   <!--  :ref="prop"-->
   <el-form-item
-      v-show="!descriptor.hidden"
+      v-show="calcShow"
       :label="labelWidth === '0px' ? '' : (label || prop)"
       :label-width="labelWidth"
       :prop="prop"
@@ -477,6 +477,17 @@ watch(
       }
     }
 )
+
+const calcShow = computed(() => {
+  if (props.descriptor.dependOnProp) {
+    if (!props.descriptor.dependOnPropRevert) {
+      return props.data[props.descriptor.dependOnProp]
+    } else {
+      return !props.data[props.descriptor.dependOnProp]
+    }
+  }
+  return !props.descriptor.hidden
+})
 
 function addHashMapKey() {
   props.modelValue[hashMapKey.value] = createDescriptorRefData(
