@@ -1,5 +1,7 @@
+import { reactive } from 'vue'
+
 export function isComplexDataType (type) {
-  return ['object', 'array'].includes(type)
+  return ['object', 'array', 'wrap'].includes(type)
 }
 
 /**
@@ -43,6 +45,7 @@ export function getLabelWidth (descriptors, fontSize) {
 const DARKEST_COLOR = 150
 
 export function darkenColor (color, offset) {
+  if (!color) return color
   if (offset === 0) return color
   if (color[0] === '#') color = color.slice(1)
   offset = parseInt(offset)
@@ -74,36 +77,48 @@ export function createDescriptorRefData (descriptor) {
     if (descriptor.type === 'object') {
       // for object
       if (descriptor.fields) {
-        const data = {}
+        const data = reactive({})
         for (const key in descriptor.fields) {
           data[key] = createDescriptorRefData(descriptor.fields[key])
         }
         return data
       } else if (descriptor.itemDescriptor) {
-        return {}
+        return reactive({})
       }
     } else if (descriptor.type === 'array') {
       // for array
-      return []
+      return reactive([])
     }
   }
-  return fixValue(undefined, descriptor)
+  return makeRefValueFromDescriptor(undefined, descriptor)
 }
 
 /**
- * fix binding value if not match descriptor
+ * make binding value if not match descriptor
  * @param value
  * @param descriptor
  */
-export function fixValue (value, descriptor) {
-  if (value === undefined) {
-    if (descriptor.type === 'array') {
-      return []
-    } else if (descriptor.type === 'object') {
-      return {}
-    } else {
-      return descriptor.defaultValue || null
+export function makeRefValueFromDescriptor (value, descriptor) {
+  // debugger
+  if (descriptor.type === 'array') {
+    const res = value || []
+    for (let i = 0; i < res.length; i++) {
+      res[i] = makeRefValueFromDescriptor(res[i], descriptor.itemDescriptor)
     }
+    return res
+  } else if (descriptor.type === 'object') {
+    const res = value || {}
+    for (const key in descriptor.fields) {
+      res[key] = makeRefValueFromDescriptor(res[key], descriptor.fields[key])
+    }
+    return res
+  } else if (descriptor.type === 'wrap') {
+    const res = value || {}
+    for (const key in descriptor.fields) {
+      res[key] = makeRefValueFromDescriptor(res[key], descriptor.fields[key])
+    }
+    return res
+  } else {
+    return value || descriptor.defaultValue
   }
-  return value
 }

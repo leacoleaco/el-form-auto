@@ -5,13 +5,22 @@ This is a library that allows you to build forms using descriptive configuration
 see this [demo](https://leacoleaco.github.io/el-form-auto-example/)
 
 
-### How to use in Vue2
+### How to use in Vue2/3
 
 1. install el-form-auto.
 
+if you use vue2, you can use this command.
+
 ```shell
-npm install el-form-auto
+npm install el-form-auto element-ui --save
 ```
+
+if you use vue3, you can use this command.
+
+```shell
+npm install le-auto-form element-plus --save
+```
+
 
 2. Global reg the element-ui component in main.js file.
 
@@ -39,3 +48,5 @@ npm install
 ```shell
 npm run build-lib
 ```
+
+

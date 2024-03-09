@@ -1,59 +1,70 @@
 <template>
-  <div :style="{
+    <div :style="{
    border:hasErr?'solid 1px orangered':'solid 1px #eeeeee'
   }"
-       style="padding: 5px"
-  >
-    <div>
-      use custom component validate example:
+         style="padding: 5px"
+    >
+        <div>
+            use custom component validate example:
+        </div>
+        <input v-model="text" link @input="onChange">&nbsp;
+        <span v-if="error" style="color:orangered">{{ error }}</span>
     </div>
-    <input v-model="text" type="text" @input="onChange">&nbsp;
-    <span v-if="error" style="color:orangered">{{ error }}</span>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'CustomComponent',
-  props: {
-    value: { type: String, required: true }
-  },
-  created () {
-    this.text = this.value
-  },
-  data () {
-    return {
-      text: '',
-      hasErr: false,
-      error: ''
+  name: 'CustomComponent'
+}
+</script>
+
+<script setup>
+import {defineProps, defineEmits, defineExpose, ref, watch, getCurrentInstance} from 'vue'
+import {registerInstance} from "../lea-auto-form/regist-util";
+
+const props = defineProps({
+    modelValue: {
+        type: String,
+        default: ''
     }
-  },
-  watch: {
-    text (v) {
-      this.$emit('input', v)
-    }
-  },
-  methods: {
-    auto$ValidateForm () {
-      // defind this method，The el-auto-form will auto call it~
-      const _this = this
-      return new Promise(function (resolve, reject) {
-        const valid = _this.text === 'rico'
+})
+
+const emit = defineEmits(['input'])
+
+const text = ref(props.modelValue)
+const hasErr = ref(false)
+const error = ref('')
+
+watch(() => text, (v) => {
+    text.value = v
+})
+
+const instance = getCurrentInstance()
+registerInstance(instance)
+
+function validateCurrentForm() {
+    // defind this method，The el-auto-form will auto call it~
+    return new Promise(function (resolve, reject) {
+        const valid = text.value === 'rico'
         if (!valid) {
-          _this.hasErr = true
-          _this.error = 'you need to input "rico"'
+            hasErr.value = true
+            error.value = 'you need to input "rico"'
         } else {
-          _this.hasErr = false
-          _this.error = ''
+            hasErr.value = false
+            error.value = ''
         }
         resolve(valid)
-      })
-    },
-    onChange (e) {
-      this.$emit('input', e.target.value)
-    }
-  }
+    })
 }
+
+defineExpose({
+    validateCurrentForm
+})
+
+function onChange(e) {
+    emit('update:modelValue', e.target.value)
+}
+
 </script>
 
 <style scoped>

@@ -1,13 +1,6 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+import 'element-plus/dist/index.css'
 import Demo from './demo/Demo.vue'
-import ElementUI from 'element-ui'
 
-Vue.use(ElementUI)
-
-Vue.config.productionTip = false
-
-// eslint-disable-next-line no-new
-new Vue({
-  el: '#app',
-  render: h => h(Demo)
-})
+const app = createApp(Demo)
+app.mount('#app')
