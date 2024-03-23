@@ -92,6 +92,26 @@
         :size="size"
         v-on="on"
     />
+    <!-- time type use el-date-picker -->
+    <el-time-picker
+        v-else-if="descriptor.type === 'time'"
+        :model-value="props.modelValue"
+        @update:modelValue="updateValue"
+        class="dynamic-input"
+        v-bind="bind"
+        :size="size"
+        v-on="on"
+    />
+    <el-time-picker
+        v-else-if="descriptor.type === 'timeRange'"
+        :model-value="props.modelValue"
+        @update:modelValue="updateValue"
+        class="dynamic-input"
+        is-range
+        v-bind="bind"
+        :size="size"
+        v-on="on"
+    />
     <el-tooltip v-if="descriptor.tooltip" v-bind="descriptor.tooltip"
                 style="margin-left:5px;"
     >
@@ -106,19 +126,20 @@
 import DynamicComponent from '../dynamic-component/DynamicComponent.vue'
 import {
   ElButton,
+  ElCascader,
+  ElCheckbox,
+  ElCheckboxGroup,
+  ElColorPicker,
+  ElDatePicker,
   ElInput,
   ElInputNumber,
-  ElSelect,
   ElOption,
-  ElDatePicker,
-  ElSwitch,
-  ElSlider,
-  ElCheckboxGroup,
-  ElCheckbox,
-  ElRadioGroup,
   ElRadio,
-  ElCascader,
-  ElColorPicker,
+  ElRadioGroup,
+  ElSelect,
+  ElSlider,
+  ElSwitch,
+  ElTimePicker,
   ElTooltip
 } from 'element-plus'
 import QuestionIcon from '../components/QuestionIcon.vue'
@@ -133,6 +154,7 @@ export default {
     ElSelect,
     ElOption,
     ElDatePicker,
+    ElTimePicker,
     ElSwitch,
     ElSlider,
     ElCheckboxGroup,
@@ -246,7 +268,7 @@ const children = computed(() => {
 })
 
 const isSpecialType = computed(() => {
-  return ['enum', 'date'].includes(props.descriptor.type)
+  return ['enum', 'date', 'time', 'timeRange'].includes(props.descriptor.type)
 })
 
 </script>

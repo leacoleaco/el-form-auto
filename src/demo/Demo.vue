@@ -141,7 +141,7 @@
 import LeaAutoForm from '../lea-auto-form/Form.vue'
 import CustomComponent from './CustomComponent.vue'
 import NestedComponent from './NestedComponent.vue'
-import { ElMessage, ElRow, ElCol, ElTimeSelect, ElInput, ElButton, ElSelect, ElOption } from 'element-plus'
+import { ElButton, ElCol, ElInput, ElMessage, ElOption, ElRow, ElSelect, ElTimeSelect } from 'element-plus'
 
 export default {
   name: 'Demo',
@@ -342,6 +342,12 @@ const descriptors = reactive({
   },
   date1: {
     type: 'date'
+  },
+  time1: {
+    type: 'time'
+  },
+  timeRange1: {
+    type: 'timeRange'
   },
   color1: {
     type: 'color'
