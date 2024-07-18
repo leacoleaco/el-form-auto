@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { ElForm, ElFormItem } from 'element-plus'
+import {ElForm, ElFormItem} from 'element-plus'
 import FormItem from './FormItem.vue'
 
 export default {
@@ -78,7 +78,7 @@ import {
   computed,
   getCurrentInstance,
 } from 'vue'
-import {provideRegister, publicRegisterInstance, registerInstance} from "./regist-util";
+import {provideRegister, registerInstance} from "./regist-util";
 
 const props = defineProps({
   modelValue: {
@@ -316,7 +316,7 @@ if (!props.disableValidateChildrenForm) {
   registerInstance(instance)
 }
 
-publicRegisterInstance(instance)
+// publicRegisterInstance(instance)
 
 function resetFields() {
   refForm.value.resetFields()
