@@ -21,6 +21,7 @@
         @update:modelValue="updateValue"
         class="dynamic-input"
         v-bind="bind"
+        filterable
         :class="{'multi-select': descriptor.multiple}"
         :size="size"
         :multiple="descriptor.multiple"
